@@ -1,20 +1,21 @@
-const http = require('http');
+const path = require('path');
 const express = require('express');
+const rootDir = require('./util/path');
+const bodyParser = require('body-parser');
+
 const app = express();
 
-/*
- * Middleware Add into the Routes
- */
+const AdminRouter = require('./routes/admin');
+const ShopRouter = require('./routes/shop');
+const { join } = require('path');
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use('/admin', AdminRouter);
+app.use(ShopRouter);
 
 app.use((req, res, next) => {
-    console.log("In the middleware");
-    next();
-});
-app.use((req, res, next) => {
-    console.log("In to another middleware");
-    res.send('<h1>This is the another middleware Response');
+    res.status(404).sendFile(path.join(rootDir, 'views', '404.html'));
 });
 
-const server = http.createServer(app);
 
-server.listen(3000);
+app.listen(3000);
