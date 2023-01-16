@@ -8,13 +8,12 @@ exports.getAddProduct = (req, res, next) => {
 }
 
 exports.postAddProduct = (req, res, next) => {
-    const product = new Product(req.body.title,req.body.imgUrl,req.body.price,req.body.description);
+    const product = new Product(req.body.title, req.body.imgUrl, req.body.price, req.body.description);
     product.save();
     res.redirect('/');
 }
 
 exports.getProducts = (req, res, next) => {
-    console.log("====getProducts");
     Product.fetchAll(products => {
         res.render('admin/products', {
             prods: products,
