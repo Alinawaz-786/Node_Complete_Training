@@ -13,6 +13,8 @@ app.set("view engine", "ejs");
 const adminRoutes = require('./routes/admin');
 const ShopRouter = require('./routes/shop');
 
+const cron =  require('./crons/cronJob');
+
 const { join } = require('path');
 
 app.use(bodyParser.urlencoded({ extended: false }));
