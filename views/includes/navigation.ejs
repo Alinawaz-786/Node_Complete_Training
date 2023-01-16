@@ -1,21 +1,16 @@
 <header class="main-header">
-    <nav class="main-header__nav">
-        <ul class="main-header__item-list">
-            <li class="main-header__item">
-                <a href="/" class="<%= path === '/' ? 'active' : '' %>">Shop</a> 
-            </li>
-            <li class="main-header__item">
-                <a href="/product" class="<%= path === '/products' ? 'active' : '' %>">Products</a> 
-            </li>
-            <li class="main-header__item">
-                <a href="/cart" class="<%= path === '/cart' ? 'active' : '' %>">Carts</a> 
-            </li>
-            <li class="main-header__item">
-                <a class="<%= path === '/admin/add-product' ? 'active' : '' %>" href="/admin/add-product">Add Product</a>
-            </li>
-            <!-- <li class="main-header__item">
-                <a class="<%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products">Product</a>
-            </li> -->
-        </ul>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">NODE</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="/">Shop</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/cart">Carts</a></li>
+                <li><a href="/admin/add-product">Add Product</a></li>
+            </ul>
+        </div>
     </nav>
 </header>

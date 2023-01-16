@@ -13,13 +13,14 @@ const getProductFromFile = cb => {
     });
 };
 module.exports = class Product {
-    constructor(title,imgUrl,price,description) {
+    constructor(title, imgUrl, price, description) {
         this.title = title;
         this.imgUrl = imgUrl;
         this.price = price;
         this.description = description;
     }
     save() {
+        this.id = Math.random();
         getProductFromFile(products => {
             products.push(this);
             fs.writeFile(p, JSON.stringify(products), (err) => {

@@ -3,21 +3,45 @@
 
     <body>
         <%- include('../includes/navigation.ejs') %>
+            <div class="container">
+                <main>
+                    <% if(prods.length > 0) {%>
+                        <h1>My Products</h1>
+                        <%= prods.length %>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Price</th>
+                                        <th>Description</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <% for (let products of prods ){%>
+                                    <tr>
+                                        <td>
+                                            <%= products.title %>
+                                        </td>
+                                        <td>
+                                            <%= products.price %>
+                                        </td>
+                                        <td>
+                                            <%= products.description %>
+                                        </td>
+                                        <td>
+                                            <a href="/products/<%= products.id %>">Edit</a> |
+                                            <a href="/">Delete</a>
+                                        </td>
+                                    </tr>
+                                    <%}%>
+                                        <% } else {%>
+                                            <tr>
+                                                <td>Np Product</td>
+                                            </tr>
+                                            <% }%>
+                            </table>
 
-            <main>
-                <% if(prods.length > 0) {%>
-                    <h1>My Products</h1>
-                    <%= prods.length %>
-                        <% for (let products of prods ){%>
-                            <p>
-                                <%= products.title %>
-                                    <%= products.price %>
-                            </p>
-                            <%}%>
+                </main>
+            </div>
 
-                                <p>List of All products ...</p>
-                                <% } else {%>
-                                    <h1>No Products</h1>
-                                    <% }%>
-            </main>
             <%- include('../includes/end.ejs') %>
