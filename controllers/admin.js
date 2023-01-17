@@ -8,7 +8,7 @@ exports.getAddProduct = (req, res, next) => {
 }
 
 exports.postAddProduct = (req, res, next) => {
-    const product = new Product(req.body.title, req.body.imgUrl, req.body.price, req.body.description);
+    const product = new Product(null,req.body.title, req.body.imgUrl, req.body.price, req.body.description);
     product.save();
     res.redirect('/');
 }
@@ -25,3 +25,32 @@ exports.getProducts = (req, res, next) => {
         });
     });
 }
+
+exports.getEditProduct = (req, res, next) => {
+    const ProID = req.params.productId;
+    Product.findById(ProID, product => {
+        res.render('shop/product-detail', {
+            prods: product,
+            pageTitle: 'Shop',
+            path: 'admin/edit-product/:productId',
+            activeShop: true,
+            productCss: true
+        });
+        console.log(product);
+    });
+}
+
+exports.updateProduct = (req, res, next) => {
+    const ProID = req.body.productId;
+    const updateTitle =  req.body.title;
+    const updateImgUrl = req.body.imgUrl;
+    const updatePrice = req.body.price;
+    const updateDescription = req.body.description;
+    const product = new Product(ProID,updateTitle, updateImgUrl,updatePrice,updateDescription);
+    product.save();
+    res.redirect('/');
+}
+
+exports.deleteProductItem = (req,res,next) => {
+    
+};

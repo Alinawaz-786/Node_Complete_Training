@@ -1,1 +1,1 @@
-[{ "title": "Allah" }, { "title": "Muhammad" }, { "title": "ALI" }, { "title": "Fatime" }, { "title": "Zain Malik" }, { "title": "ALI Nawaz" }, { "id": "12", "title": "_title", "imgUrl": "img url", "price": "120", "description": "this is test deccription" }]
+[{"id":"12","title":"ALI NAWAZ","imgUrl":"img url","price":"150","description":"this is test deccription UPdate"},{"id":"","title":"ADD New","imgUrl":"http://localhost:3000/admin/add-product","price":"250","description":"this is test"}]

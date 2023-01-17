@@ -29,14 +29,15 @@
                                             <%= products.description %>
                                         </td>
                                         <td>
-                                            <a href="/products/<%= products.id %>">Edit</a> |
-                                            <a href="/">Delete</a>
+                                            <a href="admin/edit-product/<%= products.id %>">Edit</a> |
+                                            <a href="/delete-product/<%= products.id %>">Delete</a> | 
+                                            <a href="/add-to-cart/<%= products.id %>">Add Cart</a>
                                         </td>
                                     </tr>
                                     <%}%>
                                         <% } else {%>
                                             <tr>
-                                                <td>Np Product</td>
+                                                <td>No Product</td>
                                             </tr>
                                             <% }%>
                             </table>

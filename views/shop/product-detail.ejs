@@ -3,20 +3,32 @@
 
     <body>
         <%- include('../includes/navigation.ejs') %>
-
             <main>
-                <% if(prods.length > 0) {%>
-                    <h1>My Products</h1>
-                    <%= prods.length %>
-                        <% for (let products of prods ){%>
-                            <p>
-                                <%= products.title %>
-                            </p>
-                            <%}%>
+                <div class="container">
+                    <form action="/admin/edit-product" method="POST">
+                        <input class="form-control" type="hidden" name="productId" value="<%= prods.id %>">
 
-                                <p>List of All products ...</p>
-                                <% } else {%>
-                                    <h1>No Products</h1>
-                                    <% }%>
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" name="title" value="<%= prods.title %>" id="title"
+                                aria-describedby="emailHelp">
+                        </div>
+                        <div class="mb-3">
+                            <label for="imgUrl" class="form-label">Image URL</label>
+                            <input type="text" class="form-control" name="imgUrl" value="<%= prods.imgUrl %>" id="imgUrl">
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Price</label>
+                            <input type="number" class="form-control" name="price" value="<%= prods.price %>" id="price">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"><%= prods.description %></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+
             </main>
             <%- include('../includes/end.ejs') %>
