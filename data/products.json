@@ -1,1 +1,1 @@
-[{"id":"12","title":"ALI NAWAZ","imgUrl":"img url","price":"150","description":"this is test deccription UPdate"},{"id":"","title":"ADD New","imgUrl":"http://localhost:3000/admin/add-product","price":"250","description":"this is test"}]
+[{ "id": "12", "title": "ALI NAWAZ", "imgUrl": "img url", "price": "150", "description": "this is test description UPdate" }, { "id": "13", "title": "ADD New", "imgUrl": "http://localhost:3000/admin/add-product", "price": "250", "description": "this is test" }]

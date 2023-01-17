@@ -5,7 +5,7 @@ exports.getShop = (req, res, next) => {
     Product.fetchAll(products => {
         res.render('shop/product-list', {
             prods: products,
-            pageTitle: 'Shop',
+            pageTitle: 'Shop List',
             path: '/',
             hasProducts: products.length > 0,
             activeShop: true,
@@ -18,7 +18,7 @@ exports.getIndex = (req, res, next) => {
     Product.fetchAll(products => {
         res.render('shop/index', {
             prods: products,
-            pageTitle: 'Shop',
+            pageTitle: 'Shop List',
             path: '/',
             hasProducts: products.length > 0,
             activeShop: true,
