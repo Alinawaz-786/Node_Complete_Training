@@ -14,10 +14,10 @@ module.exports = class Carts {
             const existingProduct = cart.products[existingProductIndex];
             let updateProduct;
             if (existingProduct) {
-                updateProduct = { ...existingProduct }
+                updateProduct = {...existingProduct }
                 updateProduct.qty = updateProduct.qty + 1;
                 cart.products = [...cart.products];
-                cart.products[existingProduct] 
+                cart.products[existingProduct]
             } else {
                 updateProduct = { id: id, qty: 1 };
                 cart.products = [...cart.products, updateProduct];
@@ -28,5 +28,15 @@ module.exports = class Carts {
             });
         });
 
+    }
+    static getCart(cb) {
+        fs.readFile(p, (err, fileContent) => {
+            const cart = JSON.parse(fileContent);
+            if (err) {
+                cb(null);
+            } else {
+                cb(cart);
+            }
+        });
     }
 }
