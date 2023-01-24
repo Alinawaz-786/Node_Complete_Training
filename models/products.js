@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const getDb = require('../util/database').getDb;
+
 
 const p = path.join(path.dirname(process.mainModule.filename), 'data', 'products.json');
 
@@ -21,39 +23,31 @@ module.exports = class Product {
         this.description = description;
     }
     save() {
-        getProductFromFile(products => {
-            if (this.id) {
-                const existProductIndex = products.findIndex(prod => prod.id === this.id);
-                const updateProducts = [...products];
-                updateProducts[existProductIndex] = this;
-                fs.writeFile(p, JSON.stringify(updateProducts), (err) => {
-                    console.log(err);
-                });
-            } else {
-                products.push(this);
-                fs.writeFile(p, JSON.stringify(products), (err) => {
-                    console.log(err);
-                });
-            }
-        });
+        const db = getDb();
+        db.collection('products').insertOne(this).then(result => {
+            console.log(result);
+        }).catch(err => {
+            console.log(err);
+        })
     }
-    static fetchAll(cb) {
-        getProductFromFile(cb);
-    }
-    static findById(id, cb) {
-        getProductFromFile(products => {
-            const product = products.find(p => p.id === id)
-            cb(product);
-        });
-    }
-    static deleteById(id) {
-        getProductFromFile(products => {
-            const productIndex = products.filter(prod => prod.id !== id);
-            fs.writeFile(p, JSON.stringify(products), (err) => {
-                if (!err) {
 
-                }
-            });
-        });
-    }
+    // static fetchAll(cb) {
+    //     getProductFromFile(cb);
+    // }
+    // static findById(id, cb) {
+    //     getProductFromFile(products => {
+    //         const product = products.find(p => p.id === id)
+    //         cb(product);
+    //     });
+    // }
+    // static deleteById(id) {
+    //     getProductFromFile(products => {
+    //         const productIndex = products.filter(prod => prod.id !== id);
+    //         fs.writeFile(p, JSON.stringify(products), (err) => {
+    //             if (!err) {
+
+    //             }
+    //         });
+    //     });
+    // }
 }

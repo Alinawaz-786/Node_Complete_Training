@@ -2,7 +2,7 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const errorController = require('./controllers/errorController');
-
+const mongoConnect = require('./util/database');
 const app = express();
 
 //set the view engine
@@ -13,7 +13,7 @@ app.set("view engine", "ejs");
 const adminRoutes = require('./routes/admin');
 const ShopRouter = require('./routes/shop');
 
-const cron =  require('./crons/cronJob');
+const cron = require('./crons/cronJob');
 
 const { join } = require('path');
 
@@ -25,4 +25,6 @@ app.use(ShopRouter);
 //Error Page Load
 app.use(errorController.get404);
 
-app.listen(3000);
+mongoConnect(() => {
+    app.listen(3000);
+});
