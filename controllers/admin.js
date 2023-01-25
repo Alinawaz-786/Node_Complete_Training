@@ -28,16 +28,29 @@ exports.getProducts = (req, res, next) => {
 
 exports.getEditProduct = (req, res, next) => {
     const ProID = req.params.productId;
-    Product.findById(ProID, product => {
-        res.render('shop/product-detail', {
-            prods: product,
-            pageTitle: 'Edit Shop',
-            path: 'admin/edit-product/:productId',
-            activeShop: true,
-            productCss: true
+    Product.findById(ProID)
+        .then(product => {
+            res.render('shop/product-detail', {
+                prods: product,
+                pageTitle: 'Edit Shop',
+                path: 'admin/edit-product/:productId',
+                activeShop: true,
+                productCss: true
+            });
+        })
+        .catch(err => {
+            console.log(err);
         });
-        console.log(product);
-    });
+    // Product.findById(ProID) => {
+    //     res.render('shop/product-detail', {
+    //         prods: product,
+    //         pageTitle: 'Edit Shop',
+    //         path: 'admin/edit-product/:productId',
+    //         activeShop: true,
+    //         productCss: true
+    //     });
+    //     console.log(product);
+    // });
 }
 
 exports.updateProduct = (req, res, next) => {

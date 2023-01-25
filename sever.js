@@ -2,7 +2,7 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const errorController = require('./controllers/errorController');
-const mongoConnect = require('./util/database');
+const mongoConnected = require('./util/database').mongoConnected;
 const app = express();
 
 //set the view engine
@@ -25,6 +25,6 @@ app.use(ShopRouter);
 //Error Page Load
 app.use(errorController.get404);
 
-mongoConnect(() => {
+mongoConnected(() => {
     app.listen(3000);
 });
