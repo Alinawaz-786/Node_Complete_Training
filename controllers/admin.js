@@ -1,4 +1,6 @@
+const mongodb = require('mongodb');
 const Product = require('../models/products');
+const ObjectId =  mongodb.ObjectId;
 
 exports.getAddProduct = (req, res, next) => {
     res.render('admin/add-product', {
@@ -8,8 +10,11 @@ exports.getAddProduct = (req, res, next) => {
 }
 
 exports.postAddProduct = (req, res, next) => {
+    console.log("Save Hit");
     const product = new Product(null, req.body.title, req.body.imgUrl, req.body.price, req.body.description);
-    product.save();
+    console.log("Save Product");
+    console.log(product);
+    product.Save();
     res.redirect('/');
 }
 
@@ -28,8 +33,12 @@ exports.getProducts = (req, res, next) => {
 
 exports.getEditProduct = (req, res, next) => {
     const ProID = req.params.productId;
+    console.log("Edit Hit");
     Product.findById(ProID)
         .then(product => {
+            if (!product) {
+                return res.redirect('/');
+            }
             res.render('shop/product-detail', {
                 prods: product,
                 pageTitle: 'Edit Shop',
@@ -38,19 +47,7 @@ exports.getEditProduct = (req, res, next) => {
                 productCss: true
             });
         })
-        .catch(err => {
-            console.log(err);
-        });
-    // Product.findById(ProID) => {
-    //     res.render('shop/product-detail', {
-    //         prods: product,
-    //         pageTitle: 'Edit Shop',
-    //         path: 'admin/edit-product/:productId',
-    //         activeShop: true,
-    //         productCss: true
-    //     });
-    //     console.log(product);
-    // });
+        .catch(err => console.log(err));
 }
 
 exports.updateProduct = (req, res, next) => {
@@ -59,11 +56,19 @@ exports.updateProduct = (req, res, next) => {
     const updateImgUrl = req.body.imgUrl;
     const updatePrice = req.body.price;
     const updateDescription = req.body.description;
-    const product = new Product(ProID, updateTitle, updateImgUrl, updatePrice, updateDescription);
-    product.save();
+    const product = new Product(new ObjectId(ProID), updateTitle, updateImgUrl, updatePrice, updateDescription);
+    product.Update();
     res.redirect('/');
 }
 
 exports.deleteProductItem = (req, res, next) => {
-
+    const ProID = req.params.productId;
+    Product.deleteById(ProID)
+        .then(product => {
+            if (!product) {
+                return res.redirect('/');
+            }
+            return res.redirect('/');
+        })
+        .catch(err => console.log(err));
 };
