@@ -1,0 +1,44 @@
+<%- include('../includes/head.ejs') %>
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs') %>
+            <div class="container">
+                <main>
+                    <% if(users.length > 0) {%>
+                        <h1>User</h1>
+                        <%= users.length %>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>UserName</th>
+                                        <th>Email</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <% for (let item of users ){%>
+                                    <tr>
+                                        <td>
+                                            <%= item.username %>
+                                        </td>
+                                        <td>
+                                            <%= item.email %>
+                                        </td>
+
+                                        <td>
+                                            <a href="user/edit-user/<%= item._id %>">Edit</a> |
+                                            <a href="user/delete-user/<%= item._id %>">Delete</a> |
+                                        </td>
+                                    </tr>
+                                    <%}%>
+                                        <% } else {%>
+                                            <tr>
+                                                <td>No Product</td>
+                                            </tr>
+                                            <% }%>
+                            </table>
+
+                </main>
+            </div>
+
+            <%- include('../includes/end.ejs') %>

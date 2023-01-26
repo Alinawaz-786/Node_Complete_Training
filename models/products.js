@@ -3,7 +3,7 @@ const getDb = require('../util/database').getDb;
 
 module.exports = class Product {
     constructor(id, title, imgUrl, price, description) {
-        this._id = new mongodb.ObjectId(id);
+        this._id = id ? new mongodb.ObjectId(id) : null;
         this.title = title;
         this.imgUrl = imgUrl;
         this.price = price;
@@ -54,19 +54,18 @@ module.exports = class Product {
                 console.log(err);
             });
     }
-    
-    static deleteById(prodId){
+
+    static deleteById(prodId) {
         const db = getDb();
         return db.collection('products')
-        .deleteOne({
-            _id: new mongodb.ObjectId(prodId)
-        })
-        .then(product => {
-            console.log(product);
-            return product;
-        }).catch(err => {
-            console.log(err);
-        });
-
+            .deleteOne({
+                _id: new mongodb.ObjectId(prodId)
+            })
+            .then(product => {
+                console.log(product);
+                return product;
+            }).catch(err => {
+                console.log(err);
+            });
     }
 }
