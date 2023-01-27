@@ -1,5 +1,5 @@
 const mongodb = require('mongodb');
-const getDB = require('../util/database').getDb;
+const getDb = require('../util/database').getDb;
 
 module.exports = class User {
 
@@ -10,7 +10,7 @@ module.exports = class User {
     }
 
     Save() {
-        const db = getDB();
+        const db = getDb();
         db.collection('users').insertOne(this).then(result => {
             console.log(result);
         }).catch(err => {
@@ -19,7 +19,7 @@ module.exports = class User {
     }
 
     static fetchAll() {
-        const db = getDB();
+        const db = getDb();
         return db.collection('users').find().toArray()
             .then(users => {
                 return users;
@@ -28,7 +28,7 @@ module.exports = class User {
             });
     }
 
-    static Update() {
+    Update() {
         const db = getDb();
         if (this._id) {
             db.collection('users').updateOne({ _id: this._id }, { $set: this }).then(result => {
@@ -46,7 +46,6 @@ module.exports = class User {
                 _id: new mongodb.ObjectId(userId)
             }).next()
             .then(user => {
-                console.log(user);
                 return user;
             }).catch(err => {
                 console.log(err);
@@ -60,7 +59,6 @@ module.exports = class User {
                 _id: new mongodb.ObjectId(userId)
             })
             .then(user => {
-                console.log(user);
                 return user;
             }).catch(err => {
                 console.log(err);

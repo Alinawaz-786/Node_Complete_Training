@@ -7,7 +7,7 @@ exports.getAllUsers = (req, res, next) => {
             res.render('user/list', {
                 users: users,
                 pageTitle: 'User List',
-                path: '/',
+                path: 'user/list',
                 hasUsers: users.length > 0,
                 activeShop: true,
                 productCss: true
@@ -33,3 +33,44 @@ exports.saveUser = (req, res, next) => {
     _user.Save();
     res.redirect('/user/list');
 }
+
+exports.editUser = (req, res, next) => {
+    const userId = req.params.userId;
+    console.log("Edit Hit User");
+    User.findById(userId)
+        .then(user => {
+            if (!user) {
+                return res.redirect('/user/list');
+            }
+            res.render('user/edit', {
+                user: user,
+                pageTitle: 'Edit Shop',
+                path: 'user/edit/:userId',
+                activeShop: true,
+                userCss: true
+            });
+        })
+        .catch(err => console.log(err));
+}
+
+
+exports.updateUser = (req, res, next) => {
+    const userId = req.body.userId;
+    const _userName = req.body.username;
+    const _email = req.body.email;
+    const user = new User(new ObjectId(userId), _userName, _email);
+    user.Update();
+    res.redirect('/user/list');
+}
+
+exports.deleteUser = (req, res, next) => {
+    const userId = req.params.userId;
+    User.deleteById(userId)
+        .then(user => {
+            if (!user) {
+                return res.redirect('/user/list');
+            }
+            return res.redirect('/user/list');
+        })
+        .catch(err => console.log(err));
+};

@@ -5,7 +5,7 @@
         <%- include('../includes/navigation.ejs') %>
             <div class="container">
                 <main>
-                    <% if(users.length > 0) {%>
+                    <% if(users.length> 0) {%>
                         <h1>User</h1>
                         <%= users.length %>
                             <table class="table table-bordered">
@@ -24,19 +24,16 @@
                                         <td>
                                             <%= item.email %>
                                         </td>
-
                                         <td>
-                                            <a href="user/edit-user/<%= item._id %>">Edit</a> |
-                                            <a href="user/delete-user/<%= item._id %>">Delete</a> |
+                                            <a href="edit/<%= item._id %>">Edit</a> |
+                                            <a href="delete/<%= item._id %>">Delete</a> |
                                         </td>
                                     </tr>
                                     <%}%>
-                                        <% } else {%>
-                                            <tr>
-                                                <td>No Product</td>
-                                            </tr>
-                                            <% }%>
                             </table>
+                            <% } else {%>
+                                <h1>No Product</h1>
+                                <% }%>
 
                 </main>
             </div>

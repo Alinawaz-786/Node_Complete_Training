@@ -3,15 +3,11 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/UserController');
 
-
 router.get('/list', userController.getAllUsers);
 router.get('/add', userController.addUser);
 router.post('/add', userController.saveUser)
-
-// router.get('/edit-product/:productId', adminController.getEditProduct);
-// router.post('/edit-product', adminController.updateProduct);
-
-// router.get('/delete-product/:productId', adminController.deleteProductItem);
-
+router.get('/edit/:userId', userController.editUser);
+router.post('/edit/:userId', userController.updateUser);
+router.get('/delete/:userId', userController.deleteUser);
 
 module.exports = router;
