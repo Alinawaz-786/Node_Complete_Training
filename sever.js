@@ -23,13 +23,14 @@ const User = require('./models/user');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')))
 
-// app.use((req, res, next) => {
-//     User.findById(1).then(user => {
-//         req.user = user;
-//         next();
-//     }).catch(err => console.log(err));
-//     next();
-// });
+app.use((req, res, next) => {
+    let userID = '63d654c3a13985e616394d9b';
+    User.findById(userID)
+        .then(user => {
+            req.user = new User(user._id, user.username, user.email, user.cart);
+            next();
+        }).catch(err => console.log(err));
+});
 
 app.use('/admin', adminRoutes);
 app.use('/user', UserRouter);
@@ -39,5 +40,5 @@ app.use(ShopRouter);
 app.use(errorController.get404);
 
 mongoConnected(() => {
-    app.listen(8081);
+    app.listen(3000);
 });

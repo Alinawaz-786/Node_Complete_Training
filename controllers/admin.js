@@ -10,10 +10,7 @@ exports.getAddProduct = (req, res, next) => {
 }
 
 exports.postAddProduct = (req, res, next) => {
-    console.log("Save Hit");
-    const product = new Product(null, req.body.title, req.body.imgUrl, req.body.price, req.body.description);
-    console.log("Save Product");
-    console.log(product);
+    const product = new Product(null, req.body.title, req.body.imgUrl, req.body.price, req.body.description, req.user._id);
     product.Save();
     res.redirect('/');
 }
