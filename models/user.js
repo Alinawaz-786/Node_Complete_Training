@@ -34,7 +34,7 @@ module.exports = class User {
         const _db = getDb();
         console.log(this._id);
         return _db.collection('orders')
-            .find({ 'user._id': new mongodb.ObjectId(this._id) }).toArray();
+            .find({ 'user._id': this._id }).toArray();
     }
 
     getCart() {

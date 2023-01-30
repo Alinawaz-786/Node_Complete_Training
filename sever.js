@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use((req, res, next) => {
-    let userID = '63d654c3a13985e616394d9b';
+    let userID = '63d76b7a30b6bed461d52d55';
     User.findById(userID)
         .then(user => {
             req.user = new User(user._id, user.username, user.email, user.cart);
@@ -40,5 +40,5 @@ app.use(ShopRouter);
 app.use(errorController.get404);
 
 mongoConnected(() => {
-    app.listen(3000);
+    app.listen(8080);
 });

@@ -2,6 +2,7 @@
     </head>
 
     <body>
+        <%- include('../includes/navigation.ejs') %>
         <main>
             <div class="container">
                 <table class="table table-bordered">
@@ -12,22 +13,23 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tr>
-                        <% order.item.forEach(element=> { %>
-                            <td>
-                                <b>
-                                    <%= element.title %>
-                                </b>
-                            </td>
-                            <td>
-                                <%= element.quantity %>
-                            </td>
-                            <td>
-                                <a href="#">Delete</a>|
-                            </td>
+                        <% order.forEach(orderItems=> { %>
+                            <% orderItems.items.forEach(product=> { %>
+                            <tr>
+                                <td>
+                                    <b>
+                                        <%= product.title %>
+                                    </b>
+                                </td>
+                                <td>
+                                    <%= product.quantity %>
+                                </td>
+                                <td>
+                                    <a href="#">Delete</a>|
+                                </td>
+                            </tr>
                             <%})%>
-
-                    </tr>
+                        <%})%>
                 </table>
             </div>
 

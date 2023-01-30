@@ -42,14 +42,15 @@ exports.postOrder = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
+    console.log("controller");
     req.user.getOrder({ include: ['products'] })
         .then(orders => {
-            console.log(orders.products);
-            // res.render('shop/orders', {
-            //     path: '/order',
-            //     pageTitle: 'Your Order',
-            //     order: orders
-            // });
+            console.log(orders);
+            res.render('shop/orders', {
+                path: '/order',
+                pageTitle: 'Your Order',
+                order: orders
+            });
         }).catch(err => console.log(err));
 
 };
@@ -57,8 +58,6 @@ exports.getOrders = (req, res, next) => {
 exports.postCart = (req, res, next) => {
     const ProID = req.params.productId;
     Product.findById(ProID).then(product => {
-        console.log("-----------------------------------------------------");
-        console.log(product);
         return req.user.AddToCart(product);
     }).then(result => {
         res.redirect('/cart');
