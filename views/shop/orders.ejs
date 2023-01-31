@@ -3,35 +3,35 @@
 
     <body>
         <%- include('../includes/navigation.ejs') %>
-        <main>
-            <div class="container">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Order Name</th>
-                            <th>Product Qty</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
+            <main>
+                <div class="container">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Order Name</th>
+                                <th>Product Qty</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
                         <% order.forEach(orderItems=> { %>
                             <% orderItems.items.forEach(product=> { %>
-                            <tr>
-                                <td>
-                                    <b>
+                                <tr>
+                                    <td>
+                                        <b>
                                         <%= product.title %>
                                     </b>
-                                </td>
-                                <td>
-                                    <%= product.quantity %>
-                                </td>
-                                <td>
-                                    <a href="#">Delete</a>|
-                                </td>
-                            </tr>
-                            <%})%>
-                        <%})%>
-                </table>
-            </div>
+                                    </td>
+                                    <td>
+                                        <%= product.quantity %>
+                                    </td>
+                                    <td>
+                                        <a href="#">Delete</a>|
+                                    </td>
+                                </tr>
+                                <%})%>
+                                    <%})%>
+                    </table>
+                </div>
 
-        </main>
-        <%- include('../includes/end.ejs') %>
+            </main>
+            <%- include('../includes/end.ejs') %>

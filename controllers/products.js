@@ -43,8 +43,9 @@ exports.postOrder = (req, res, next) => {
 
 exports.getOrders = (req, res, next) => {
     console.log("controller");
-    req.user.getOrder({ include: ['products'] })
+    req.user.getOrder()
         .then(orders => {
+            console.log("orders");
             console.log(orders);
             res.render('shop/orders', {
                 path: '/order',
