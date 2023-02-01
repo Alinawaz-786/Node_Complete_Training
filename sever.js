@@ -13,7 +13,7 @@ app.set("view engine", "ejs");
 
 //Controller SetUP
 const adminRoutes = require('./routes/admin');
-// const ShopRouter = require('./routes/shop');
+const ShopRouter = require('./routes/shop');
 // const UserRouter = require('./routes/userRouter');
 
 const cron = require('./crons/cronJob');
@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/admin', adminRoutes);
 // app.use('/user', UserRouter);
-// app.use(ShopRouter);
+app.use(ShopRouter);
 
 //Error Page Load
 app.use(errorController.get404);
@@ -43,7 +43,7 @@ app.use(errorController.get404);
 mongoose.set('strictQuery', false);
 
 mongoose.connect('mongodb://localhost:27017/Userdb').then(result => {
-    app.listen(3000)
+    app.listen(4000)
 }).catch(err => {
     console.log(err);
 });

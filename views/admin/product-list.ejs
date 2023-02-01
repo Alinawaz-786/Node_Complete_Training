@@ -3,25 +3,54 @@
 
     <body>
         <%- include('../includes/navigation.ejs') %>
-            <main>
-                <form class="product-form" action="/admin/add-product" method="POST">
-                    <div class="form-control">
-                        <label for="title">Title</label>
-                        <input id="title" type="text" name="title">
+            <div class="container">
+                <main>
+                    <div class="container">
+                        <div class="col-lg-6">
+                            <h1>Total Products
+                                <%= prods.length %>
+                            </h1>
+                        </div>
+                        <div class="col-lg-6">
+                            <a href="/admin/add-product" class="btn btn-primary">Add Product</a>
+                        </div>
                     </div>
-                    <div class="form-control">
-                        <label for="title">Image URL</label>
-                        <input id="imgUrl" type="text" name="imgUrl">
-                    </div>
-                    <div class="form-control">
-                        <label for="price">Price</label>
-                        <input id="price" type="number" name="price">
-                    </div>
-                    <div class="form-control">
-                        <label for="description">Description</label>
-                        <textarea name="description" id="description" rows="5"></textarea>
-                    </div>
-                    <button type="submit">Add Product</button>
-                </form>
-            </main>
+                    <% if(prods.length > 0) {%>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Price</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <% for (let products of prods ){%>
+                                <tr>
+                                    <td>
+                                        <%= products.title %>
+                                    </td>
+                                    <td>
+                                        <%= products.price %>
+                                    </td>
+                                    <td>
+                                        <%= products.description %>
+                                    </td>
+                                    <td>
+                                        <a href="edit-product/<%= products._id %>">Edit</a> |
+                                        <a href="delete-product/<%= products._id %>">Delete</a> |
+                                        <a href="/add-to-cart/<%= products._id %>">Add Cart</a>
+                                    </td>
+                                </tr>
+                                <%}%>
+                                    <% } else {%>
+                                        <tr>
+                                            <td>No Product</td>
+                                        </tr>
+                                        <% }%>
+                        </table>
+
+                </main>
+            </div>
+
             <%- include('../includes/end.ejs') %>
