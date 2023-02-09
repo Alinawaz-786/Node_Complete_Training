@@ -13,7 +13,8 @@ exports.postAddProduct = (req, res, next) => {
         title: req.body.title,
         imgUrl: req.body.imgUrl,
         price: req.body.price,
-        description: req.body.description
+        description: req.body.description,
+        userId: req.user
     });
     product.save().then(result => {
         res.redirect('/admin/list-product');
@@ -23,8 +24,12 @@ exports.postAddProduct = (req, res, next) => {
 }
 
 exports.getProducts = (req, res, next) => {
+    console.log("=========================================");
     Product.find()
+        // .select('title price -_id')
+        .populate('userId', 'name')
         .then(products => {
+            console.log(products);
             res.render('admin/product-list', {
                 prods: products,
                 pageTitle: 'Products List',
