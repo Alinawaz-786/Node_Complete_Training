@@ -13,11 +13,30 @@ const userSchema = new Schema({
     },
     cart: {
         items: [{
-            productId: { type: Schema.Types.ObjectId, required: true },
+            productId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
             quantity: { type: Number, require: true }
         }]
     }
 });
+
+userSchema.methods.AddToCart = function (product) {
+    // console.log(product);
+    const _cartProductIndex = this.cart.items.findIndex(cp => {
+        return cp.productId.toString() === product._id.toString();
+    });
+    let _newQuantity = 1;
+    const _updateCardItems = [...this.cart.items];
+
+    if (_cartProductIndex >= 0) {
+        _newQuantity = this.cart.items[_cartProductIndex].quantity + 1;
+        _updateCardItems[_cartProductIndex].quantity = _newQuantity;
+    } else {
+        _updateCardItems.push({ productId: product._id, quantity: 1 });
+    }
+    const _updateCart = { items: _updateCardItems };
+     this.cart = _updateCart;
+    return this.save();
+}
 
 module.exports = mongoose.model('User', userSchema);
 

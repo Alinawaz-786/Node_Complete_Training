@@ -2,9 +2,10 @@
     </head>
 
     <body>
+        <%- include('../includes/navigation.ejs') %>
         <main>
             <div class="container">
-                <table class="table table-bordered">
+                <table class="table table-bordered" style="margin-top: 50px;">
                     <thead>
                         <tr>
                             <th>Product Name</th>
@@ -17,7 +18,7 @@
                             <% products.forEach(element=> { %>
                                 <td>
                                     <b>
-                                        <%= element.title %>
+                                        <%= element.productId.title %>
                                     </b>
                                 </td>
                                 <td>

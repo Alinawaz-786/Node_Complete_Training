@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use((req, res, next) => {
-    let userID = '63dc0c16dad1ec212bf64000';
+    let userID = '63eb314ad51add4ca2a95522';
     User.findById(userID)
         .then(user => {
             req.user = user;
@@ -46,7 +46,7 @@ mongoose.connect('mongodb://localhost:27017/Userdb').then(result => {
         if (!user) {
             const user = new User({
                 name: "Ali",
-                email: "sana@aligmail.com",
+                email: "ali@nawazgmail.com",
                 cart: {
                     items: []
                 }
