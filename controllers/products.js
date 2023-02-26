@@ -1,6 +1,22 @@
 const Product = require('../models/products');
 const Cart = require('../models/carts');
 
+
+exports.getProducts = (req, res, next) => {
+    Product.find()
+        .then(products => {
+            res.render('admin/product-list', {
+                prods: products,
+                pageTitle: 'Products List',
+                path: '/',
+                hasProducts: products.length > 0,
+                activeShop: true,
+                productCss: true
+            });
+        });
+}
+
+
 exports.getShop = (req, res, next) => {
     Product.fetchAll().then(products => {
             res.render('shop/product-list', {
@@ -66,7 +82,11 @@ exports.postCart = (req, res, next) => {
 }
 
 exports.getCart = (req, res, next) => {
-    req.user.getCart().then(products => {
+    // console.log(req.user.cart);
+    req.user.populate('cart.items.productId')
+    .then(user => {
+        console.log(user.cart.items);
+        const products = user.cart.items;
         res.render('shop/carts', {
             path: '/cart',
             pageTitle: 'Your Carts',
