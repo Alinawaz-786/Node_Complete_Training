@@ -23,6 +23,8 @@ exports.postAddProduct = (req, res, next) => {
 }
 
 exports.getProducts = (req, res, next) => {
+    const isLogedIn =  req.get('Cookie').split(';')[2].trim().split('=')[1];
+
     Product.find()
         .then(products => {
             res.render('admin/product-list', {
@@ -31,7 +33,8 @@ exports.getProducts = (req, res, next) => {
                 path: '/admin/products',
                 hasProducts: products.length > 0,
                 activeShop: true,
-                productCss: true
+                productCss: true,
+                isAuthenticated:isLogedIn
             });
         });
 }

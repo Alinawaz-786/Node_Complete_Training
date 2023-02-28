@@ -3,72 +3,78 @@ const Cart = require('../models/carts');
 
 
 exports.getProducts = (req, res, next) => {
+    const isLogedIn =  req.get('Cookie').split(';')[2].trim().split('=')[1];
+
     Product.find()
-        .then(products => {
-            res.render('admin/product-list', {
-                prods: products,
-                pageTitle: 'Products List',
-                path: '/',
-                hasProducts: products.length > 0,
-                activeShop: true,
-                productCss: true
-            });
+    .then(products => {
+        res.render('admin/product-list', {
+            prods: products,
+            pageTitle: 'Products List',
+            path: '/',
+            hasProducts: products.length > 0,
+            activeShop: true,
+            productCss: true,
+            isAuthenticated:isLogedIn
         });
+    });
 }
 
 
 exports.getShop = (req, res, next) => {
+    const isLogedIn =  req.get('Cookie').split(';')[2].trim().split('=')[1];
     Product.fetchAll().then(products => {
-            res.render('shop/product-list', {
-                prods: products,
-                pageTitle: 'Shop List',
-                path: '/',
-                hasProducts: products.length > 0,
-                activeShop: true,
-                productCss: true
-            });
-        })
-        .catch(err => {
-            console.log(err);
+        res.render('shop/product-list', {
+            prods: products,
+            pageTitle: 'Shop List',
+            path: '/',
+            hasProducts: products.length > 0,
+            activeShop: true,
+            productCss: true,
+            isAuthenticated:isLogedIn
         });
+    })
+    .catch(err => {
+        console.log(err);
+    });
 }
 
 exports.getIndex = (req, res, next) => {
+    const isLogedIn =  req.get('Cookie').split(';')[2].trim().split('=')[1];
     Product.fetchAll().then(products => {
-            res.render('shop/index', {
-                prods: products,
-                pageTitle: 'Shop List',
-                path: '/',
-                hasProducts: products.length > 0,
-                activeShop: true,
-                productCss: true
-            });
-        })
-        .catch(err => {
-            console.log(err);
+        res.render('shop/index', {
+            prods: products,
+            pageTitle: 'Shop List',
+            path: '/',
+            hasProducts: products.length > 0,
+            activeShop: true,
+            productCss: true,
+            isAuthenticated:isLogedIn
         });
+    })
+    .catch(err => {
+        console.log(err);
+    });
 }
 
 
 exports.postOrder = (req, res, next) => {
-    let fetchedCart;
     req.user.addOrder().then(result => {
         res.redirect('/cart');
     }).catch(err => console.log(err));
 };
 
 exports.getOrders = (req, res, next) => {
-    console.log("controller");
+    const isLogedIn =  req.get('Cookie').split(';')[2].trim().split('=')[1];
+
     req.user.getOrder()
-        .then(orders => {
-            console.log("orders");
-            console.log(orders);
-            res.render('shop/orders', {
-                path: '/order',
-                pageTitle: 'Your Order',
-                order: orders
-            });
-        }).catch(err => console.log(err));
+    .then(orders => {
+        res.render('shop/orders', {
+            path: '/order',
+            pageTitle: 'Your Order',
+            order: orders,
+            isAuthenticated:isLogedIn
+        });
+    }).catch(err => console.log(err));
 
 };
 
@@ -82,32 +88,32 @@ exports.postCart = (req, res, next) => {
 }
 
 exports.getCart = (req, res, next) => {
-    // console.log(req.user.cart);
+    const isLogedIn =  req.get('Cookie').split(';')[2].trim().split('=')[1];
+
     req.user.populate('cart.items.productId')
     .then(user => {
-        console.log(user.cart.items);
         const products = user.cart.items;
         res.render('shop/carts', {
-            path: '/cart',
+            path: '/cart', 
             pageTitle: 'Your Carts',
-            products: products
+            products: products,
+            isAuthenticated:isLogedIn
         });
     }).catch(err => console.log(err));
 }
 
 exports.deleteCartItem = (req, res, next) => {
     const _proID = req.params.productId;
-    console.log("_proID");
-    console.log(_proID);
     req.user.deleteItemFromCart(_proID).then(result => {
         res.redirect('/cart');
     }).catch(err => console.log(err));
 }
 
 exports.getCheckOut = (req, res, next) => {
+    const isLogedIn =  req.get('Cookie').split(';')[2].trim().split('=')[1];
     res.render('shop/checkout', {
         path: '/checkout',
-        pageTitle: 'Checkout'
-
+        pageTitle: 'Checkout',
+        isAuthenticated:isLogedIn
     });
 }

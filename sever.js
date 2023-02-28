@@ -13,7 +13,8 @@ app.set("view engine", "ejs");
 //Controller SetUP
 const adminRoutes = require('./routes/admin');
 const ShopRouter = require('./routes/shop');
-// const UserRouter = require('./routes/userRouter');
+const AuthRouter = require('./routes/auth');
+// const UserRouter = require('./routes/userRouter'); 
 
 const cron = require('./crons/cronJob');
 
@@ -35,6 +36,7 @@ app.use((req, res, next) => {
 app.use('/admin', adminRoutes);
 // app.use('/user', UserRouter);
 app.use(ShopRouter);
+app.use(AuthRouter);
 
 //Error Page Load
 app.use(errorController.get404);
