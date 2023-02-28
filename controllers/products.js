@@ -3,57 +3,61 @@ const Cart = require('../models/carts');
 
 
 exports.getProducts = (req, res, next) => {
-    const isLogedIn =  req.get('Cookie').split(';')[2].trim().split('=')[1];
+    //const isLogedIn = req.get('Cookie').split(';')[2].trim().split('=')[1];
+    const isLogedIn = req.get('Cookie').split('=')[1];
 
     Product.find()
-    .then(products => {
-        res.render('admin/product-list', {
-            prods: products,
-            pageTitle: 'Products List',
-            path: '/',
-            hasProducts: products.length > 0,
-            activeShop: true,
-            productCss: true,
-            isAuthenticated:isLogedIn
+        .then(products => {
+            res.render('admin/product-list', {
+                prods: products,
+                pageTitle: 'Products List',
+                path: '/',
+                hasProducts: products.length > 0,
+                activeShop: true,
+                productCss: true,
+                isAuthenticated: isLogedIn
+            });
         });
-    });
 }
 
 
 exports.getShop = (req, res, next) => {
-    const isLogedIn =  req.get('Cookie').split(';')[2].trim().split('=')[1];
+    const isLogedIn = req.get('Cookie').split('=')[1];
+    //const isLogedIn = req.get('Cookie').split(';')[2].trim().split('=')[1];
     Product.fetchAll().then(products => {
-        res.render('shop/product-list', {
-            prods: products,
-            pageTitle: 'Shop List',
-            path: '/',
-            hasProducts: products.length > 0,
-            activeShop: true,
-            productCss: true,
-            isAuthenticated:isLogedIn
+            res.render('shop/product-list', {
+                prods: products,
+                pageTitle: 'Shop List',
+                path: '/',
+                hasProducts: products.length > 0,
+                activeShop: true,
+                productCss: true,
+                isAuthenticated: isLogedIn
+            });
+        })
+        .catch(err => {
+            console.log(err);
         });
-    })
-    .catch(err => {
-        console.log(err);
-    });
 }
 
 exports.getIndex = (req, res, next) => {
-    const isLogedIn =  req.get('Cookie').split(';')[2].trim().split('=')[1];
+    //const isLogedIn = req.get('Cookie').split(';')[2].trim().split('=')[1];
+    const isLogedIn = req.get('Cookie').split('=')[1];
+
     Product.fetchAll().then(products => {
-        res.render('shop/index', {
-            prods: products,
-            pageTitle: 'Shop List',
-            path: '/',
-            hasProducts: products.length > 0,
-            activeShop: true,
-            productCss: true,
-            isAuthenticated:isLogedIn
+            res.render('shop/index', {
+                prods: products,
+                pageTitle: 'Shop List',
+                path: '/',
+                hasProducts: products.length > 0,
+                activeShop: true,
+                productCss: true,
+                isAuthenticated: isLogedIn
+            });
+        })
+        .catch(err => {
+            console.log(err);
         });
-    })
-    .catch(err => {
-        console.log(err);
-    });
 }
 
 
@@ -64,17 +68,18 @@ exports.postOrder = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-    const isLogedIn =  req.get('Cookie').split(';')[2].trim().split('=')[1];
+    //const isLogedIn = req.get('Cookie').split(';')[2].trim().split('=')[1];
+    const isLogedIn = req.get('Cookie').split('=')[1];
 
     req.user.getOrder()
-    .then(orders => {
-        res.render('shop/orders', {
-            path: '/order',
-            pageTitle: 'Your Order',
-            order: orders,
-            isAuthenticated:isLogedIn
-        });
-    }).catch(err => console.log(err));
+        .then(orders => {
+            res.render('shop/orders', {
+                path: '/order',
+                pageTitle: 'Your Order',
+                order: orders,
+                isAuthenticated: isLogedIn
+            });
+        }).catch(err => console.log(err));
 
 };
 
@@ -88,18 +93,20 @@ exports.postCart = (req, res, next) => {
 }
 
 exports.getCart = (req, res, next) => {
-    const isLogedIn =  req.get('Cookie').split(';')[2].trim().split('=')[1];
+    //const isLogedIn = req.get('Cookie').split(';')[2].trim().split('=')[1];
+    const isLogedIn = req.get('Cookie').split('=')[1];
+
 
     req.user.populate('cart.items.productId')
-    .then(user => {
-        const products = user.cart.items;
-        res.render('shop/carts', {
-            path: '/cart', 
-            pageTitle: 'Your Carts',
-            products: products,
-            isAuthenticated:isLogedIn
-        });
-    }).catch(err => console.log(err));
+        .then(user => {
+            const products = user.cart.items;
+            res.render('shop/carts', {
+                path: '/cart',
+                pageTitle: 'Your Carts',
+                products: products,
+                isAuthenticated: isLogedIn
+            });
+        }).catch(err => console.log(err));
 }
 
 exports.deleteCartItem = (req, res, next) => {
@@ -110,10 +117,12 @@ exports.deleteCartItem = (req, res, next) => {
 }
 
 exports.getCheckOut = (req, res, next) => {
-    const isLogedIn =  req.get('Cookie').split(';')[2].trim().split('=')[1];
+    //const isLogedIn = req.get('Cookie').split(';')[2].trim().split('=')[1];
+    const isLogedIn = req.get('Cookie').split('=')[1];
+
     res.render('shop/checkout', {
         path: '/checkout',
         pageTitle: 'Checkout',
-        isAuthenticated:isLogedIn
+        isAuthenticated: isLogedIn
     });
 }

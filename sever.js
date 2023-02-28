@@ -37,6 +37,11 @@ app.use('/admin', adminRoutes);
 // app.use('/user', UserRouter);
 app.use(ShopRouter);
 app.use(AuthRouter);
+app.use(session({
+    secret: "Set Key",
+    resave: false,
+    saveUninitialized: false
+}))
 
 //Error Page Load
 app.use(errorController.get404);
