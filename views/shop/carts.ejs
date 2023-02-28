@@ -14,23 +14,24 @@
                         </tr>
                     </thead>
                     <% if(products.length> 0) {%>
-                        <tr>
-                            <% products.forEach(element=> { %>
+                 
+                        <% products.forEach(element=> { %>
+                            <tr>
                                 <td>
                                     <b>
                                         <%= element.productId.title %>
                                     </b>
                                 </td>
-                                <td>
+                                <td> 
                                     <%= element.quantity %>
                                 </td>
                                 <td>
                                     <a href="/cart-delete/<%= element._id %> ">Delete</a>|
                                     <a href="/cart-order">Order</a>
                                 </td>
-                                <%})%>
+                            </tr>
+                        <%})%>
 
-                        </tr>
                         <%} else{%>
                             <tr>
                                 <td colspan="3">
