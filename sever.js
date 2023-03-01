@@ -2,10 +2,18 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 const errorController = require('./controllers/errorController');
 // const mongoConnected = require('./util/database').mongoConnected;
 const app = express();
 
+const MONGODB_URL = 'mongodb://localhost:27017/Userdb';
+
+const store = new MongoDBStore({
+    uri: MONGODB_URL,
+    collection: 'sessions'
+});
 //set the view engine
 app.set("view engine", "ejs");
 // app.set("views", path.resolve(__dirname, "view/ejs"))
@@ -37,18 +45,14 @@ app.use('/admin', adminRoutes);
 // app.use('/user', UserRouter);
 app.use(ShopRouter);
 app.use(AuthRouter);
-app.use(session({
-    secret: "Set Key",
-    resave: false,
-    saveUninitialized: false
-}))
+app.use(session({ secret: 'secret', resave: true, saveUninitialized: true, store: store })); //Session setup
 
 //Error Page Load
 app.use(errorController.get404);
 
 mongoose.set('strictQuery', false);
 
-mongoose.connect('mongodb://localhost:27017/Userdb').then(result => {
+mongoose.connect(MONGODB_URL).then(result => {
     User.findOne().then(user => {
         if (!user) {
             const user = new User({
