@@ -7,7 +7,7 @@
             <ul class="nav navbar-nav">
                 <% if(isAuthenticated) {%>
                     <li class="active"><a href="#">Home</a></li>
-                    <li><a href="/">Shop</a></li>
+                    <li><a href="/">Shop</a></li><li><a href="/logout">Logout</a></li>
                 <% } %>
                 <li><a href="/products">Products</a></li>
                 <li><a href="/cart">Carts</a></li>
@@ -15,6 +15,7 @@
                 <li><a href="/get-order">Orders</a></li>
                 <% if(!isAuthenticated) {%>
                 <li><a href="/login">Login</a></li>
+                
                 <% } %>
             </ul>
         </div>

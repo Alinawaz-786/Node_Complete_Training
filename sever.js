@@ -32,20 +32,23 @@ const User = require('./models/user');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use((req, res, next) => {
-    let userID = '63eb314ad51add4ca2a95522';
-    User.findById(userID)
-        .then(user => {
-            req.user = user;
-            next();
-        }).catch(err => console.log(err));
-});
+// app.use((req, res, next) => {
+//     let userID = '63eb314ad51add4ca2a95522';
+//     User.findById(userID)
+//         .then(user => {
+//             req.user = user;
+//             next();
+//         }).catch(err => console.log(err));
+// });
 
 app.use('/admin', adminRoutes);
 // app.use('/user', UserRouter);
+
+app.use(session({ secret: 'secret', resave: true, saveUninitialized: true, store: store })); //Session setup
+
 app.use(ShopRouter);
 app.use(AuthRouter);
-app.use(session({ secret: 'secret', resave: true, saveUninitialized: true, store: store })); //Session setup
+
 
 //Error Page Load
 app.use(errorController.get404);
@@ -53,18 +56,21 @@ app.use(errorController.get404);
 mongoose.set('strictQuery', false);
 
 mongoose.connect(MONGODB_URL).then(result => {
-    User.findOne().then(user => {
-        if (!user) {
-            const user = new User({
-                name: "Ali",
-                email: "ali@nawazgmail.com",
-                cart: {
-                    items: []
-                }
-            });
-            user.save();
-        }
-    })
+    /*
+    * User.findOne().then(user => {
+    *    if (!user) {
+    *        const user = new User({
+    *            name: "Ali",
+    *            email: "ali@nawazgmail.com",
+    *            cart: {
+    *                items: []
+    *            }
+    *        });
+    *        user.save();
+    *    }
+    *
+    * })
+    */
 
     app.listen(4000)
 }).catch(err => {
