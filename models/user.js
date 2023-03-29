@@ -63,7 +63,7 @@ module.exports = mongoose.model('User', userSchema);
 //                 items: products,
 //                 user: {
 //                     _id: new mongodb.ObjectId(this._id),
-//                     username: this.username
+//                     email: req.user.email
 //                 }
 //             };
 //             return _db.collection('orders').insertOne(order);

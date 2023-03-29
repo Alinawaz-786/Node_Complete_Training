@@ -2,10 +2,19 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
 exports.getLogin = (req, res, next) => {
+    let message = req.flash('error');
+    if(message.length > 0){
+        message = message[0]; 
+    }else{
+        message = null;
+    }
+
     res.render('auth/login', {
         path: '/login',
         pageTitle: 'Login Page',
-        isAuthenticated: false
+        isAuthenticated: req.session.isLoggedIn,
+        csrfToken:req.csrfToken(),
+        errorMessage:message 
     });
 };
 
@@ -15,6 +24,7 @@ exports.postLogin = (req, res, next) => {
     
     User.findOne({ email: _email }).then(userExist => {
         if(!userExist){
+            req.flash('error','Invalid Email or password')
             res.redirect('/login');
         }
         bcrypt.compare(_password, userExist.password)

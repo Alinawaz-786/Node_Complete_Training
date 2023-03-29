@@ -1,19 +1,22 @@
 const Product = require('../models/products');
 
 exports.getAddProduct = (req, res, next) => {
+
     res.render('admin/add-product', {
         pageTitle: 'Add Product',
-        path: '/admin/add-product'
+        path: '/admin/add-product',
+        isAuthenticated:req.session.isLoggedIn,
+        csrfToken:req.csrfToken()
     });
 }
 
 exports.postAddProduct = (req, res, next) => {
-    // const product = new Product(null, req.body.title, req.body.imgUrl, req.body.price, req.body.description, req.user._id);
+   
     const product = new Product({
         title: req.body.title,
         imgUrl: req.body.imgUrl,
         price: req.body.price,
-        description: req.body.description
+        description: req.body.description,
     });
     product.save().then(result => {
         res.redirect('/admin/list-product');
@@ -23,8 +26,6 @@ exports.postAddProduct = (req, res, next) => {
 }
 
 exports.getProducts = (req, res, next) => {
-    const isLogedIn =  req.get('Cookie').split(';')[2].trim().split('=')[1];
-
     Product.find()
         .then(products => {
             res.render('admin/product-list', {
@@ -34,7 +35,7 @@ exports.getProducts = (req, res, next) => {
                 hasProducts: products.length > 0,
                 activeShop: true,
                 productCss: true,
-                isAuthenticated:isLogedIn
+                isAuthenticated:req.session.isLoggedIn
             });
         });
 }
@@ -51,7 +52,9 @@ exports.getEditProduct = (req, res, next) => {
                 pageTitle: 'Edit Shop',
                 path: 'admin/edit-product/:productId',
                 activeShop: true,
-                productCss: true
+                productCss: true,
+        isAuthenticated:req.session.isLoggedIn
+
             });
         })
         .catch(err => console.log(err));
@@ -64,7 +67,6 @@ exports.updateProduct = (req, res, next) => {
     const updatePrice = req.body.price;
     const updateDescription = req.body.description;
 
-    // const product = new Product(new ObjectId(ProID), updateTitle, updateImgUrl, updatePrice, updateDescription);
 
     Product.findById(ProID).then(product => {
             product.title = updateTitle;
