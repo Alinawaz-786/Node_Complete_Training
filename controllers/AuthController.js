@@ -1,20 +1,21 @@
+const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid');
 const User = require('../models/user');
 
 
-const transporter  =  nodemailer.createTransport(sendgridTransport({
-    auth:{
+const transporter = nodemailer.createTransport(sendgridTransport({
+    auth: {
         api_key: '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'
     }
 }));
- 
+
 exports.getLogin = (req, res, next) => {
     let message = req.flash('error');
-    if(message.length > 0){
-        message = message[0]; 
-    }else{
+    if (message.length > 0) {
+        message = message[0];
+    } else {
         message = null;
     }
 
@@ -22,31 +23,31 @@ exports.getLogin = (req, res, next) => {
         path: '/login',
         pageTitle: 'Login Page',
         isAuthenticated: req.session.isLoggedIn,
-        csrfToken:req.csrfToken(),
-        errorMessage:message 
+        csrfToken: req.csrfToken(),
+        errorMessage: message
     });
 };
 
 exports.postLogin = (req, res, next) => {
     const _email = req.body.email;
     const _password = req.body.password;
-    
+
     User.findOne({ email: _email }).then(userExist => {
-        if(!userExist){
-            req.flash('error','Invalid Email or password')
+        if (!userExist) {
+            req.flash('error', 'Invalid Email or password')
             res.redirect('/login');
         }
         bcrypt.compare(_password, userExist.password)
-        .then(doMatch =>{
-            if(doMatch ){
-                req.session.isLoggedIn = true;
-                req.session.user = userExist;
-                return req.session.save(err=>{
-                    res.redirect('/');
-                });
-            }
-            res.redirect('/login');
-        })
+            .then(doMatch => {
+                if (doMatch) {
+                    req.session.isLoggedIn = true;
+                    req.session.user = userExist;
+                    return req.session.save(err => {
+                        res.redirect('/');
+                    });
+                }
+                res.redirect('/login');
+            })
     });
 };
 
@@ -85,10 +86,10 @@ exports.postSignUp = (req, res, next) => {
                 return user.save();
             }).then(result => {
                 transporter.sendMail({
-                    to:_email,
-                    from:'alinawaz1857@gmail.com',
-                    subject:'Signup succeeded',
-                    html:'<h1>You are successfully signed up!</h1>'
+                    to: _email,
+                    from: 'alinawaz1857@gmail.com',
+                    subject: 'Signup succeeded',
+                    html: '<h1>You are successfully signed up!</h1>'
                 });
                 res.redirect('/login');
             })
@@ -98,8 +99,54 @@ exports.postSignUp = (req, res, next) => {
     });
 };
 
+exports.getReset = (req, res, next) => {
+    let message = req.flash('error');
+    if (message.length > 0) {
+        message = message[0];
+    } else {
+        message = null;
+    }
+    // Get and Set
+    res.render('auth/reset', {
+        path: '/reset',
+        pageTitle: 'Reset Page',
+        isAuthenticated: req.session.isLoggedIn,
+        csrfToken: req.csrfToken(),
+        errorMessage: message
+    });
+};
 
-
+exports.postReset = (req, res, next) => {
+    crypto.randomBytes(32, (err, buffer) => {
+        if (err) {
+            console.log(err);
+            return res.redirect('/reset');
+        }
+        const token = buffer.toString('hex');
+        User.findOne({ email: req.body.email }).then(user => {
+            if (!user) {
+                req.flash('error', 'No Account with that email find');
+                return res.redirect('/reset');
+            }
+            user.resetToken = token;
+            user.resetTokenExpiration = Date.now() + 3600000;
+            return user.save();
+        }).then(result => {
+            transporter.sendMail({
+                to: req.body.email,
+                from: 'alinawaz1857@gmail.com',
+                subject: 'Forgot Password',
+                html: `
+                <p>You requested for Password Reset</p>
+                <p> <a href="http://localhost:4000/reset/${token}">Reset your password</a></p>
+                `
+            });
+        })
+            .catch(err => {
+                console.log(err);
+            })
+    })
+};
 
 exports.logout = (req, res, next) => {
     req.session.destroy(err => {
