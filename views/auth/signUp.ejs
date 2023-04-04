@@ -1,4 +1,4 @@
-x<%- include('../includes/head.ejs') %>
+<%- include('../includes/head.ejs') %>
     </head>
 
     <body>
@@ -6,6 +6,7 @@ x<%- include('../includes/head.ejs') %>
             <main>
                 <div class="container" style="margin-top: 10pc;">
                     <form action="/signUp" method="POST">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <!-- Email input -->
                         <div class="form-outline mb-4">
                             <label class="form-label" for="form2Example1">User Name</label>

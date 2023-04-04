@@ -1,22 +1,25 @@
 const Product = require('../models/products');
+const mongoose = require('mongoose');
 
 exports.getAddProduct = (req, res, next) => {
 
     res.render('admin/add-product', {
         pageTitle: 'Add Product',
         path: '/admin/add-product',
-        isAuthenticated:req.session.isLoggedIn,
-        csrfToken:req.csrfToken()
+        isAuthenticated: req.session.isLoggedIn,
+        csrfToken: req.csrfToken()
     });
 }
 
 exports.postAddProduct = (req, res, next) => {
-   
+    let _userId = String(req.session.user._id);
+
     const product = new Product({
         title: req.body.title,
         imgUrl: req.body.imgUrl,
         price: req.body.price,
         description: req.body.description,
+        user_id: _userId,
     });
     product.save().then(result => {
         res.redirect('/admin/list-product');
@@ -35,7 +38,7 @@ exports.getProducts = (req, res, next) => {
                 hasProducts: products.length > 0,
                 activeShop: true,
                 productCss: true,
-                isAuthenticated:req.session.isLoggedIn
+                isAuthenticated: req.session.isLoggedIn
             });
         });
 }
@@ -53,7 +56,7 @@ exports.getEditProduct = (req, res, next) => {
                 path: 'admin/edit-product/:productId',
                 activeShop: true,
                 productCss: true,
-        isAuthenticated:req.session.isLoggedIn
+                isAuthenticated: req.session.isLoggedIn
 
             });
         })
@@ -69,14 +72,14 @@ exports.updateProduct = (req, res, next) => {
 
 
     Product.findById(ProID).then(product => {
-            product.title = updateTitle;
-            product.imgUrl = updateImgUrl;
-            product.price = updatePrice;
-            product.description = updateDescription;
-            product.save();
-        }).then(result => {
-            res.redirect('/admin/list-product');
-        })
+        product.title = updateTitle;
+        product.imgUrl = updateImgUrl;
+        product.price = updatePrice;
+        product.description = updateDescription;
+        product.save();
+    }).then(result => {
+        res.redirect('/admin/list-product');
+    })
         .catch(err => console.log(err));
 }
 

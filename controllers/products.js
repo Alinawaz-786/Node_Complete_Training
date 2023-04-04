@@ -4,7 +4,7 @@ const Cart = require('../models/carts');
 
 exports.getProducts = (req, res, next) => {
 
-    Product.find()
+    Product.findOne({user_id:String(req.session.user._id)})
         .then(products => {
             res.render('admin/product-list', {
                 prods: products,
