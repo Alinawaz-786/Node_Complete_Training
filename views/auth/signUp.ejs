@@ -5,7 +5,12 @@
         <%- include('../includes/navigation.ejs') %>
             <main>
                 <div class="container" style="margin-top: 10pc;">
-                    <form action="/signUp" method="POST">
+                    <% if(errorMessage) { %>
+                        <div style="color: brown;" class="alert alert-dark" role="alert">
+                            <%= errorMessage %>
+                        </div>
+                    <% } %>
+                    <form action="/signUp" method="POST" novalidate>
                         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <!-- Email input -->
                         <div class="form-outline mb-4">
