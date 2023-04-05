@@ -1,9 +1,23 @@
 <header class="main-header">
-    <nav class="main-header__nav">
-        <ul class="main-header__item-list">
-            <li class="main-header__item"><a href="/">Shop</a> </li>
-            <li class="main-header__item"><a href="admin/add-product">Add Product</a></li>
-
-        </ul>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">NODE</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <% if(isAuthenticated) {%>
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="/">Shop</a></li><li><a href="/logout">Logout</a></li>
+                <% } %>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/cart">Carts</a></li>
+                <li><a href="/user/list">Users</a></li>
+                <li><a href="/get-order">Orders</a></li>
+                <% if(!isAuthenticated) {%>
+                <li><a href="/login">Login</a></li>
+                
+                <% } %>
+            </ul>
+        </div>
     </nav>
 </header>

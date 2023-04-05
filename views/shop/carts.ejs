@@ -1,0 +1,45 @@
+<%- include('../includes/head.ejs') %>
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs') %>
+        <main>
+            <div class="container">
+                <table class="table table-bordered" style="margin-top: 50px;">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Product Qty</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <% if(products.length> 0) {%>
+                        <tr>
+                            <% products.forEach(element=> { %>
+                                <td>
+                                    <b>
+                                        <%= element.productId.title %>
+                                    </b>
+                                </td>
+                                <td>
+                                    <%= element.quantity %>
+                                </td>
+                                <td>
+                                    <a href="/cart-delete/<%= element._id %> ">Delete</a>|
+                                    <a href="/cart-order">Order</a>
+                                </td>
+                                <%})%>
+
+                        </tr>
+                        <%} else{%>
+                            <tr>
+                                <td colspan="3">
+                                    <b>NO Cart</b>
+                                </td>
+                            </tr>
+                            <%}%>
+                </table>
+            </div>
+
+        </main>
+        <%- include('../includes/end.ejs') %>

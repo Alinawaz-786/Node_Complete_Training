@@ -1,0 +1,47 @@
+<%- include('../includes/head.ejs') %>
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs') %>
+            <div class="container">
+                <main>
+                    <% if(prods.length > 0) {%>
+                        <h1>My Products</h1>
+                        <%= prods.length %>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Price</th>
+                                        <th>Description</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <% for (let products of prods ){%>
+                                    <tr>
+                                        <td>
+                                            <%= products.title %>
+                                        </td>
+                                        <td>
+                                            <%= products.price %>
+                                        </td>
+                                        <td>
+                                            <%= products.description %>
+                                        </td>
+                                        <td>
+                                            <a href="/product/<%= products.id %>">Edit</a> |
+                                            <a href="/delete-product/<%= products.id %>">Delete</a>
+                                        </td>
+                                    </tr>
+                                    <%}%>
+                                        <% } else {%>
+                                            <tr>
+                                                <td>No Product</td>
+                                            </tr>
+                                            <% }%>
+                            </table>
+
+                </main>
+            </div>
+
+            <%- include('../includes/end.ejs') %>
