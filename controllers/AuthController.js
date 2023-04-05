@@ -206,7 +206,7 @@ exports.postNewPassowrd = (req, res, next) => {
 
 exports.logout = (req, res, next) => {
     req.session.destroy(err => {
-        console.log(req.session.user);
+        // console.log(req.session.user);
         res.redirect('/login');
     });
 };

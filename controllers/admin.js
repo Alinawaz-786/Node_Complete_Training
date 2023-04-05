@@ -29,7 +29,7 @@ exports.postAddProduct = (req, res, next) => {
 }
 
 exports.getProducts = (req, res, next) => {
-    Product.find()
+    Product.find({user_id:String(req.session.user._id)})
         .then(products => {
             res.render('admin/product-list', {
                 prods: products,
@@ -47,7 +47,11 @@ exports.getEditProduct = (req, res, next) => {
     const ProID = req.params.productId;
     Product.findById(ProID)
         .then(product => {
-            if (!product) {
+            console.log(req.session.user._id);
+            var id = mongoose.Types.ObjectId(req.session.user._id);
+            console.log(id.toString());
+
+            if (!product && product.user_id !== String(req.session.user._id) ) {
                 return res.redirect('/');
             }
             res.render('shop/product-detail', {
@@ -56,6 +60,7 @@ exports.getEditProduct = (req, res, next) => {
                 path: 'admin/edit-product/:productId',
                 activeShop: true,
                 productCss: true,
+                csrfToken: req.csrfToken(),
                 isAuthenticated: req.session.isLoggedIn
 
             });
