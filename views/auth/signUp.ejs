@@ -1,6 +1,11 @@
 <%- include('../includes/head.ejs') %>
     </head>
-
+    <style>
+        .invalid {
+            border: 1px solid #c01616;
+            border-radius: 4px;
+        }
+    </style>
     <body>
         <%- include('../includes/navigation.ejs') %>
             <main>
@@ -21,20 +26,28 @@
                         <!-- Email input -->
                         <div class="form-outline mb-4">
                             <label class="form-label" for="form2Example1">Email address</label>
-                            <input type="email" id="form2Example1" name="email" class=" form-control " />
+                            <input type="email" 
+                             class="form-control <%= validationErrors.find(e => e.param === 'email') ? 'invalid':''  %>"
+                             id="form2Example1"
+                             name="email" 
+                             value="<%= oldInput.email %>" />
                         </div>
 
                         
                         <!-- Password input -->
                         <div class="form-outline mb-4 ">
                             <label class="form-label " for="form2Example2 ">Password</label>
-                            <input type="password " id="form2Example2" name="password" class="form-control " />
+                            <input type="password " id="form2Example2" name="password"                              
+                            class="form-control <%= validationErrors.find(e => e.param === 'password') ? 'invalid':''  %>"
+                            value="<%= oldInput.password %>" />
                         </div>
 
                         <!-- Password input -->
                         <div class="form-outline mb-4 ">
                             <label class="form-label " for="conformedPassword">Conformed Password</label>
-                            <input type="password " id="conformedPassword" name="conformedPassword" class="form-control " />
+                            <input type="password " id="conformedPassword" name="conformedPassword" 
+                            class="form-control <%= validationErrors.find(e => e.param === 'password') ? 'invalid':''  %>"
+                            value="<%= oldInput.conformedPassword %>" />
                         </div>
 
                         <br>

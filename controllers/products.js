@@ -95,16 +95,16 @@ exports.getCart = (req, res, next) => {
     const isLogedIn = req.get('Cookie').split('=')[1];
 
 
-    req.user.populate('cart.items.productId')
-        .then(user => {
-            const products = user.cart.items;
-            res.render('shop/carts', {
-                path: '/cart',
-                pageTitle: 'Your Carts',
-                products: products,
-                isAuthenticated: req.session.isLoggedIn
-            });
-        }).catch(err => console.log(err));
+    // req.user.populate('cart.items.productId')
+    //     .then(user => {
+    //         const products = user.cart.items;
+    //         res.render('shop/carts', {
+    //             path: '/cart',
+    //             pageTitle: 'Your Carts',
+    //             products: products,
+    //             isAuthenticated: req.session.isLoggedIn
+    //         });
+    //     }).catch(err => console.log(err));
 }
 
 exports.deleteCartItem = (req, res, next) => {

@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid');
 const User = require('../models/user');
-const {validationResult} =  require('express-validator');
+const { validationResult } = require('express-validator');
 const { reset } = require('nodemon');
 
 
@@ -66,7 +66,13 @@ exports.getSignUp = (req, res, next) => {
         pageTitle: 'SignUp Page',
         isAuthenticated: false,
         csrfToken: req.csrfToken(),
-        errorMessage: message
+        errorMessage: message,
+        oldInput: {
+            email: '',
+            password: '',
+            conformedPassword: '',
+        },
+        validationErrors: []
     });
 };
 
@@ -76,49 +82,52 @@ exports.postSignUp = (req, res, next) => {
     const _email = req.body.email;
     const _password = req.body.password;
     // const _conformedPassword = req.body.conformedPassword;
-    if (req.body.conformedPassword != req.body.password) {
-        res.send("Password Issues");
-    }
+    // if (req.body.conformedPassword != req.body.password) {
+    //     res.send("Password Issues");
+    // }
     var _fullname = _email.split('@');
     var fullName = _fullname[0];
 
     const errors = validationResult(req);
-    if(!errors.isEmpty()){
+    console.log('********************************');
+    console.log(errors);
+    if (!errors.isEmpty()) {
         // console.log(errors.array())
-        return  res.status(422).render('auth/signUp', {
+        return res.status(422).render('auth/signUp', {
             path: '/signUp',
             pageTitle: 'SignUp Page',
             isAuthenticated: false,
             csrfToken: req.csrfToken(),
-            errorMessage: errors.array()[0].msg
+            errorMessage: errors.array()[0].msg,
+            oldInput: {
+                email: _email,
+                password: _password,
+                conformedPassword: req.body.conformedPassword,
+            },
+            validationErrors: errors.array()
         });
     }
-    User.findOne({ email: _email }).then(userExist => {
-        if (userExist) {
-            return res.redirect('/signUp');
-        }
-        return bcrypt.hash(_password, 12)
-            .then(hashPassword => {
-                const user = new User({
-                    name: fullName,
-                    email: _email,
-                    password: hashPassword,
-                    cart: { items: [] }
-                });
-                return user.save();
-            }).then(result => {
-                transporter.sendMail({
-                    to: _email,
-                    from: 'alinawaz1857@gmail.com',
-                    subject: 'Signup succeeded',
-                    html: '<h1>You are successfully signed up!</h1>'
-                });
-                res.redirect('/login');
-            })
 
-    }).catch(err => {
-        console.log(err);
-    });
+    return bcrypt.hash(_password, 12)
+        .then(hashPassword => {
+            const user = new User({
+                name: fullName,
+                email: _email,
+                password: hashPassword,
+                cart: { items: [] }
+            });
+            return user.save();
+        }).then(result => {
+            transporter.sendMail({
+                to: _email,
+                from: 'alinawaz1857@gmail.com',
+                subject: 'Signup succeeded',
+                html: '<h1>You are successfully signed up!</h1>'
+            });
+            res.redirect('/login');
+        }).catch(error => {
+            console.log(error)
+        })
 };
 
 exports.getReset = (req, res, next) => {
