@@ -73,7 +73,7 @@ exports.getEditProduct = (req, res, next) => {
         });
 }
 
-exports.updateProduct = (req, res, next) => {
+ exports.updateProduct = (req, res, next) => {
     const ProID = req.body.productId;
     const updateTitle = req.body.title;
     const updateImgUrl = req.body.imgUrl;

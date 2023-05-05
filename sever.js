@@ -7,7 +7,6 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
 const errorController = require('./controllers/errorController');
-// const mongoConnected = require('./util/database').mongoConnected;
 const app = express();
 const MONGODB_URL = 'mongodb://localhost:27017/Userdb';
 
@@ -17,19 +16,14 @@ const store = new MongoDBStore({
 });
 //CRSF Token setting
 const csrfProtection = csrf();
-
 //set the view engine
 app.set("view engine", "ejs");
-// app.set("views", path.resolve(__dirname, "view/ejs"))
-
 //Controller SetUP
 const adminRoutes = require('./routes/admin');
 const ShopRouter = require('./routes/shop');
 const AuthRouter = require('./routes/auth');
-// const UserRouter = require('./routes/userRouter'); 
-
+// const UserRouter = require('./routes/userRouter');
 const cron = require('./crons/cronJob');
-
 const {join} = require('path');
 const User = require('./models/user');
 
@@ -72,9 +66,15 @@ app.use((req, res, next) => {
 //Error Page Load
 app.get('/500', errorController.get500);
 app.use(errorController.get404);
+
 app.use((error, req, res, next) => {
     // res.redirect('/500');
-    res.status(500).render('500', {pageTitle: 'Page Not Found', path: '', isAuthenticated: req.isLogedIn});
+    res.status(500).render('500',
+        {
+            pageTitle: 'Page Not Found',
+            path: '',
+            isAuthenticated: req.isLogedIn
+        });
 });
 
 mongoose.set('strictQuery', false);
@@ -91,7 +91,6 @@ mongoose.connect(MONGODB_URL).then(result => {
     *        });
     *        user.save();
     *    }
-    *
     * })
     */
     app.listen(4000)
