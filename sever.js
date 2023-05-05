@@ -16,7 +16,7 @@ const store = new MongoDBStore({
     collection: 'sessions'
 });
 //CRSF Token setting
-const csrfProtection =  csrf();
+const csrfProtection = csrf();
 
 //set the view engine
 app.set("view engine", "ejs");
@@ -30,13 +30,13 @@ const AuthRouter = require('./routes/auth');
 
 const cron = require('./crons/cronJob');
 
-const { join } = require('path');
+const {join} = require('path');
 const User = require('./models/user');
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use(session({ secret: 'secret', resave: true, saveUninitialized: true, store: store })); //Session setup
+app.use(session({secret: 'secret', resave: true, saveUninitialized: true, store: store})); //Session setup
 
 app.use(csrfProtection);
 app.use(flash());
@@ -45,14 +45,14 @@ app.use('/admin', adminRoutes);
 app.use(ShopRouter);
 app.use(AuthRouter);
 
-app.use((req,res,next) => {
+app.use((req, res, next) => {
     res.locals.isAuthenticated = req.session.isLoggedIn;
     res.locals.csrfToken = req.csrfToken();
     next();
 });
 
 app.use((req, res, next) => {
-    if(!req.session.user){
+    if (!req.session.user) {
         next();
     }
     // console.log(req.session);
@@ -61,11 +61,22 @@ app.use((req, res, next) => {
         .then(user => {
             req.user = user;
             next();
-        }).catch(err => console.log(err));
+        }).catch(err => {
+        /*
+        * Throw error if database connection issue
+        */
+        next(Error(err));
+    });
 });
 
 //Error Page Load
+app.get('/500', errorController.get500);
 app.use(errorController.get404);
+app.use((error, req, res, next) => {
+    // res.redirect('/500');
+    res.status(500).render('500', {pageTitle: 'Page Not Found', path: '', isAuthenticated: req.isLogedIn});
+});
+
 mongoose.set('strictQuery', false);
 mongoose.connect(MONGODB_URL).then(result => {
     /*

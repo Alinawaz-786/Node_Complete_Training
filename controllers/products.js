@@ -1,9 +1,8 @@
 const Product = require('../models/products');
 const Cart = require('../models/carts');
 
-
 exports.getProducts = (req, res, next) => {
-
+    // console.log(req.session);
     Product.find({user_id:String(req.session.user._id)})
         .then(products => {
             res.render('admin/product-list', {
@@ -17,7 +16,6 @@ exports.getProducts = (req, res, next) => {
             });
         });
 }
-
 
 exports.getShop = (req, res, next) => {
     const isLogedIn = req.get('Cookie').split('=')[1];
@@ -34,7 +32,9 @@ exports.getShop = (req, res, next) => {
             });
         })
         .catch(err => {
-            console.log(err);
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error)
         });
 }
 
@@ -54,15 +54,20 @@ exports.getIndex = (req, res, next) => {
             });
         })
         .catch(err => {
-            console.log(err);
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error)
         });
 }
-
 
 exports.postOrder = (req, res, next) => {
     req.user.addOrder().then(result => {
         res.redirect('/cart');
-    }).catch(err => console.log(err));
+    }).catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error)
+    });
 };
 
 exports.getOrders = (req, res, next) => {
@@ -77,7 +82,11 @@ exports.getOrders = (req, res, next) => {
                 order: orders,
                 isAuthenticated: req.session.isLoggedIn
             });
-        }).catch(err => console.log(err));
+        }).catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error)
+    });
 
 };
 
@@ -111,7 +120,11 @@ exports.deleteCartItem = (req, res, next) => {
     const _proID = req.params.productId;
     req.user.deleteItemFromCart(_proID).then(result => {
         res.redirect('/cart');
-    }).catch(err => console.log(err));
+    }).catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error)
+    });
 }
 
 exports.getCheckOut = (req, res, next) => {
