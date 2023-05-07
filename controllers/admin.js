@@ -15,11 +15,17 @@ exports.postAddProduct = (req, res, next) => {
     const product = new Product({
         // _id: new mongoose.Types.ObjectId('6454d14c0e94b3a52e48a75c'),
         title: req.body.title,
-        imgUrl: req.body.imgUrl,
+        imgUrl: req.file.path,
         price: req.body.price,
         description: req.body.description,
         user_id: _userId,
     });
+
+    if(!product.imgUrl){ //Add validation in this
+        res.redirect('/admin/add-product');
+    }
+    console.log(product)
+    // product.imgUrl = product.imgUrl.path;
     product.save().then(result => {
         res.redirect('/admin/list-product');
     }).catch(err => {
@@ -75,17 +81,22 @@ exports.getEditProduct = (req, res, next) => {
 
  exports.updateProduct = (req, res, next) => {
     const ProID = req.body.productId;
-    const updateTitle = req.body.title;
-    const updateImgUrl = req.body.imgUrl;
-    const updatePrice = req.body.price;
-    const updateDescription = req.body.description;
-
-    Product.findById(ProID).then(product => {
+     const updateTitle = req.body.title;
+     const updateImgUrl = req.file.path;
+     const updatePrice = req.body.price;
+     const updateDescription = req.body.description;
+     // if(updateImgUrl){
+     //     updateImgUrl = req.file.path;
+     // }
+     // console.log(req.body);
+     console.log("*******************************************")
+     Product.findById(ProID).then(product => {
         product.title = updateTitle;
         product.imgUrl = updateImgUrl;
         product.price = updatePrice;
         product.description = updateDescription;
-        product.save();
+         console.log(product);
+         product.save();
     }).then(result => {
         res.redirect('/admin/list-product');
     }).catch(err => {

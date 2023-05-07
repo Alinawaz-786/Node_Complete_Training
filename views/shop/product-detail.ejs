@@ -5,7 +5,7 @@
         <%- include('../includes/navigation.ejs') %>
             <main>
                 <div class="container">
-                    <form action="/admin/edit-product" method="POST">
+                    <form action="/admin/edit-product" method="POST" enctype="multipart/form-data">
                         <input class="form-control" type="hidden" name="productId" value="<%= prods._id %>">
                         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
@@ -16,7 +16,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="imgUrl" class="form-label">Image URL</label>
-                            <input type="text" class="form-control" name="imgUrl" value="<%= prods.imgUrl %>" id="imgUrl">
+                            <input type="file" class="form-control" name="image" value="<%= prods.imgUrl %>" id="image">
                         </div>
                         <div class="mb-3">
                             <label for="price" class="form-label">Price</label>
