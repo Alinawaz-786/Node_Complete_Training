@@ -13,5 +13,6 @@ router.get('/add-to-cart/:productId', isAuth, shopController.postCart);
 // router.get('/cart-delete/:productId', shopController.deleteCartItem);
 // router.get('/cart-order', shopController.postOrder);
 // router.get('/get-order', shopController.getOrders);
+// router.get('/orders/:orderId',isAuth, shopController.getInvoice);
 
 module.exports = router;

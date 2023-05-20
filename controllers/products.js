@@ -1,9 +1,12 @@
+const fs = require('fs');
+const path = require('path');
+const pdfDocument = require('pdfkit');
 const Product = require('../models/products');
 const Cart = require('../models/carts');
 
 exports.getProducts = (req, res, next) => {
     // console.log(req.session);
-    Product.find({user_id:String(req.session.user._id)})
+    Product.find({user_id: String(req.session.user._id)})
         .then(products => {
             res.render('admin/product-list', {
                 prods: products,
@@ -21,16 +24,16 @@ exports.getShop = (req, res, next) => {
     const isLogedIn = req.get('Cookie').split('=')[1];
     //const isLogedIn = req.get('Cookie').split(';')[2].trim().split('=')[1];
     Product.fetchAll().then(products => {
-            res.render('shop/product-list', {
-                prods: products,
-                pageTitle: 'Shop List',
-                path: '/',
-                hasProducts: products.length > 0,
-                activeShop: true,
-                productCss: true,
-                isAuthenticated: req.session.isLoggedIn
-            });
-        })
+        res.render('shop/product-list', {
+            prods: products,
+            pageTitle: 'Shop List',
+            path: '/',
+            hasProducts: products.length > 0,
+            activeShop: true,
+            productCss: true,
+            isAuthenticated: req.session.isLoggedIn
+        });
+    })
         .catch(err => {
             const error = new Error(err);
             error.httpStatusCode = 500;
@@ -43,16 +46,16 @@ exports.getIndex = (req, res, next) => {
     const isLogedIn = req.get('Cookie').split('=')[1];
 
     Product.fetchAll().then(products => {
-            res.render('shop/index', {
-                prods: products,
-                pageTitle: 'Shop List',
-                path: '/',
-                hasProducts: products.length > 0,
-                activeShop: true,
-                productCss: true,
-                isAuthenticated: req.session.isLoggedIn
-            });
-        })
+        res.render('shop/index', {
+            prods: products,
+            pageTitle: 'Shop List',
+            path: '/',
+            hasProducts: products.length > 0,
+            activeShop: true,
+            productCss: true,
+            isAuthenticated: req.session.isLoggedIn
+        });
+    })
         .catch(err => {
             const error = new Error(err);
             error.httpStatusCode = 500;
@@ -93,7 +96,9 @@ exports.getOrders = (req, res, next) => {
 exports.postCart = (req, res, next) => {
     const ProID = req.params.productId;
     Product.findById(ProID).then(product => {
-        return req.user.AddToCart(product);
+        console.log(product);
+        console.log(req.user);
+        // return req.user.AddToCart(product);
     }).then(result => {
         res.redirect('/cart');
     })
@@ -137,3 +142,61 @@ exports.getCheckOut = (req, res, next) => {
         isAuthenticated: req.session.isLoggedIn
     });
 }
+
+exports.getInvoice = (req, res, next) => {
+    const OrderId = req.params.orderId;
+    Order.findById(OrderId).then(order => {
+        if (!order) {
+            return next(new Error('No Order Found.'));
+        }
+        if (order.user.userId.toString() !== req.user._id.toString()) {
+            return next(new Error('Unauthorized'));
+        }
+        const invoiceName = 'invoice-' + OrderId + '.pdf';
+        const invoicePath = path.join('data', 'invoices', invoiceName);
+        //Method 1
+        // fs.readFile(invoicePath, (err, data) => {
+        //     if (err) {
+        //         return next(err);
+        //     }
+        //     res.setHeader('Content-Type', 'application/pdf');
+        //     res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
+        //     res.send(data);
+        // });
+
+        //Method 2
+        // const file = fs.createReadStream(invoicePath);
+        // res.setHeader('Content-Type', 'application/pdf');
+        // res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
+        // file.pipe(res);
+
+        /*
+         * Method 3
+         *  New Package PDF Kit
+         */
+        const pdfDoc = new PDFDocument();
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
+        pdfDoc.pipe(fs.createReadStream(invoiceName));
+        pdfDoc.pipe(res);
+        pdfDoc.text('Hello Worlds!');
+        // Design PDF
+        pdfDoc.fontSize(12).text('Invoice',{
+            underline: true
+        });
+        pdfDoc.text('--------------------------------');
+        let totalPrice = 0;
+        order.products.forEach(prod =>{
+                totalPrice +=prod.quantity * prod.product.price ;
+                pdfDoc.text(
+                    prod.product.title + '-'+ prod.quantity +'x'+'$'+prod.product.price
+                );
+        });
+
+        pdfDoc.text('Total Price: ');
+        pdfDoc.text();
+        pdfDoc.end();
+
+    }).catch(err => next(err));
+
+};

@@ -28,6 +28,7 @@
         "nodemailer-sendgrid": "^1.0.3",
         "nodemon": "^2.0.20",
         "nstall": "^0.2.0",
+        "pdfkit": "^0.13.0",
         "pug": "^3.0.2",
         "railway": "^2.0.17"
     }
