@@ -30,7 +30,8 @@
                                         </td>
                                         <td>
                                             <a href="/product/<%= products.id %>">Edit</a> |
-                                            <a href="/delete-product/<%= products.id %>">Delete</a>
+                                            <a href="/delete-product/<%= products.id %>">Delete</a> |
+                                            <button class="btn" type="button" onclick="deleteProduct(this)">Delete</button>
                                         </td>
                                     </tr>
                                     <%}%>

@@ -1,4 +1,5 @@
 <%- include('../includes/head.ejs') %>
+<script src="../js/admin.js"></script>
     </head>
 
     <body>
@@ -37,9 +38,12 @@
                                         <%= products.description %>
                                     </td>
                                     <td>
+                                        <input type="hidden" name="productName" value="<%= products.title %>">
+                                        <input type="hidden" name="productId" value="<%= products._id %>">
                                         <a href="/admin/edit-product/<%= products._id %>">Edit</a> |
                                         <a href="/admin/delete-product/<%= products._id %>">Delete</a> |
-                                        <a href="/add-to-cart/<%= products._id %>">Add Cart</a>
+                                        <a href="/add-to-cart/<%= products._id %>">Add Cart</a> |
+                                        <button class="btn" type="button" onclick="deleteProduct(this)">Delete</button>
                                     </td>
                                 </tr>
                                 <%}%>
