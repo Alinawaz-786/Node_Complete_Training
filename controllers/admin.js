@@ -1,6 +1,7 @@
 const Product = require('../models/products');
 const mongoose = require('mongoose');
 const fileHelper = require('../util/file');
+const ITEM_PER_PAGE = 2;
 
 exports.getAddProduct = (req, res, next) => {
     res.render('admin/add-product', {
@@ -37,12 +38,26 @@ exports.postAddProduct = (req, res, next) => {
 }
 
 exports.getProducts = (req, res, next) => {
-    Product.find({user_id: String(req.session.user._id)})
-        .then(products => {
+    // console.log(req.session);
+    let totalItems;
+    const page =  +req.query.page || 1;
+    console.log("*********************")
+    console.log(page)
+    Product.find().count().then(numProducts => {
+        totalItems = numProducts;
+        return Product.find().skip((page - 1) * ITEM_PER_PAGE).limit(ITEM_PER_PAGE);
+
+    }).then(products => {
             res.render('admin/product-list', {
                 prods: products,
                 pageTitle: 'Products List',
                 path: '/admin/products',
+                currentPage:page,
+                hasNextPage:ITEM_PER_PAGE*page <totalItems,
+                hasPreviousPage:page>1,
+                nextPage:page+1,
+                previousPage:page+1,
+                lastPage:Math.ceil(totalItems / ITEM_PER_PAGE),
                 hasProducts: products.length > 0,
                 activeShop: true,
                 productCss: true,

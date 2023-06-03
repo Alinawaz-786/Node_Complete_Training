@@ -3,15 +3,28 @@ const path = require('path');
 const pdfDocument = require('pdfkit');
 const Product = require('../models/products');
 const Cart = require('../models/carts');
+const ITEM_PER_PAGE = 2;
 
 exports.getProducts = (req, res, next) => {
     // console.log(req.session);
-    Product.find({user_id: String(req.session.user._id)})
+    let totalItems;
+    const page =  +req.query.page || 1;
+    Product.find().count().then(numProducts => {
+        totalItems = numProducts;
+        return Product.find().skip((page - 1) * ITEM_PER_PAGE).limit(ITEM_PER_PAGE);
+
+    })
         .then(products => {
             res.render('admin/product-list', {
                 prods: products,
                 pageTitle: 'Products List',
                 path: '/',
+                currentPage:page,
+                hasNextPage:ITEM_PER_PAGE*page <totalItems,
+                hasPreviousPage:page>1,
+                nextPage:page+1,
+                previousPage:page+1,
+                lastPage:Math.ceil(totalItems / ITEM_PER_PAGE),
                 hasProducts: products.length > 0,
                 activeShop: true,
                 productCss: true,
@@ -181,16 +194,16 @@ exports.getInvoice = (req, res, next) => {
         pdfDoc.pipe(res);
         pdfDoc.text('Hello Worlds!');
         // Design PDF
-        pdfDoc.fontSize(12).text('Invoice',{
+        pdfDoc.fontSize(12).text('Invoice', {
             underline: true
         });
         pdfDoc.text('--------------------------------');
         let totalPrice = 0;
-        order.products.forEach(prod =>{
-                totalPrice +=prod.quantity * prod.product.price ;
-                pdfDoc.text(
-                    prod.product.title + '-'+ prod.quantity +'x'+'$'+prod.product.price
-                );
+        order.products.forEach(prod => {
+            totalPrice += prod.quantity * prod.product.price;
+            pdfDoc.text(
+                prod.product.title + '-' + prod.quantity + 'x' + '$' + prod.product.price
+            );
         });
 
         pdfDoc.text('Total Price: ');

@@ -1,47 +1,66 @@
 <%- include('../includes/head.ejs') %>
-    </head>
+</head>
 
-    <body>
-        <%- include('../includes/navigation.ejs') %>
-            <div class="container">
-                <main>
-                    <% if(prods.length > 0) {%>
-                        <h1>My Products</h1>
-                        <%= prods.length %>
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Price</th>
-                                        <th>Description</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <% for (let products of prods ){%>
-                                    <tr>
-                                        <td>
-                                            <%= products.title %>
-                                        </td>
-                                        <td>
-                                            <%= products.price %>
-                                        </td>
-                                        <td>
-                                            <%= products.description %>
-                                        </td>
-                                        <td>
-                                            <a href="/product/<%= products.id %>">Edit</a> |
-                                            <a href="/delete-product/<%= products.id %>">Delete</a>
-                                        </td>
-                                    </tr>
-                                    <%}%>
-                                        <% } else {%>
-                                            <tr>
-                                                <td>No Product</td>
-                                            </tr>
-                                            <% }%>
-                            </table>
+<body>
+<%- include('../includes/navigation.ejs') %>
+<div class="container">
+    <main>
+        <% if(prods.length > 0) { %>
+            <h1>My Products</h1>
+            <%= prods.length %>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <% for (let products of prods ){ %>
+                <tr>
+                    <td>
+                        <%= products.title %>
+                    </td>
+                    <td>
+                        <%= products.price %>
+                    </td>
+                    <td>
+                        <%= products.description %>
+                    </td>
+                    <td>
+                        <a href="/product/<%= products.id %>">Edit</a> |
+                        <a href="/delete-product/<%= products.id %>">Delete</a>
+                    </td>
+                </tr>
+            <% } %>
+            <tr>
+                <td>
+                    <section>
+                    <%if(currentPage !== 1 && previousPage !== 1) {%>
+                        <a href="/?page=1>">1</a>
+                    <%}%>
+                        <%if(hasPreviousPage !== 1) {%>
+                            <a href="/?page=<%= previousPage%>"><%= previousPage%></a>
+                        <%}%>
+                        <a href="/?page=<%= currentPage%>"><%= currentPage%></a>
+                        <%if(hasNextPage) {%>
+                        <a href="/?page=<%= nextPage%>"><%= nextPage%></a>
+                        <%}%>
+                        <%if(lastPage !== currentPage && nextPage !== lastPage) {%>
+                        <a href="/?page=<%= lastPage%>"><%= lastPage%></a>
+                        <%}%>
+                    </section>
+                </td>nextPage
+            </tr>
+            <% } else { %>
+                <tr>
+                    <td>No Product</td>
+                </tr>
+            <% } %>
+        </table>
 
-                </main>
-            </div>
+    </main>
+</div>
 
-            <%- include('../includes/end.ejs') %>
+<%- include('../includes/end.ejs') %>
