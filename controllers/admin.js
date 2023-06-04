@@ -121,10 +121,8 @@ exports.deleteProductItem = (req, res, next) => {
         if (!product) {
             return res.redirect('/admin/list-product');
         }
-        return res.redirect('/admin/list-product');
+        res.status(200).json({message: 'Success!'});
     }).catch(err => {
-        const error = new Error(err);
-        error.httpStatusCode = 500;
-        return next(error)
+        res.status(500).json({message: 'Deleting product failed!'});
     });
 };
