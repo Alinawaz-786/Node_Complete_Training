@@ -1,6 +1,7 @@
 // src/Login.tsx
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../css/auth.css';
 
 const Login: React.FC = () => {
@@ -39,7 +40,10 @@ const Login: React.FC = () => {
           Login
         </button>
       </form>
-    </div>
+      <Link to="/signup">SignUp</Link>|
+      <Link to="/forget-password">Forget Password</Link>
+      
+    </div >
   );
 };
 

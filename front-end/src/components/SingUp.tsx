@@ -1,6 +1,7 @@
 // src/SignUp.tsx
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../css/auth.css';
 
 
@@ -52,7 +53,7 @@ const SignUp: React.FC = () => {
           <input
             type="password"
             placeholder="Enter your Repeat password"
-            value={password}
+            value={repeatPassword}
             onChange={(e) => setRepeatPassword(e.target.value)}
           />
         </div>
@@ -60,6 +61,7 @@ const SignUp: React.FC = () => {
           Login
         </button>
       </form>
+      <Link to="/login">Login</Link>
     </div>
   );
 };

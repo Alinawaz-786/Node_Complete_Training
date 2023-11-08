@@ -1,6 +1,7 @@
 // src/ForgetPassword.tsx
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../css/auth.css';
 
 const ForgetPassword: React.FC = () => {
@@ -30,6 +31,8 @@ const ForgetPassword: React.FC = () => {
           Submit
         </button>
       </form>
+      <Link to="/login">Login</Link>
+
     </div>
   );
 };
