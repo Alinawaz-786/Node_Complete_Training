@@ -1,11 +1,14 @@
-// src/Login.tsx
+// src/SignUp.tsx
 
 import React, { useState } from 'react';
 import '../css/auth.css';
 
-const Login: React.FC = () => {
+
+const SignUp: React.FC = () => {
+  const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
 
   const handleLogin = () => {
     // Add your login logic here
@@ -27,12 +30,30 @@ const Login: React.FC = () => {
           />
         </div>
         <div className="form-control">
+          <label>Email</label>
+          <input
+            type="email"
+            placeholder="Enter your Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div className="form-control">
           <label>Password</label>
           <input
             type="password"
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div className="form-control">
+          <label>Repeat Password</label>
+          <input
+            type="password"
+            placeholder="Enter your Repeat password"
+            value={password}
+            onChange={(e) => setRepeatPassword(e.target.value)}
           />
         </div>
         <button type="button" onClick={handleLogin}>
@@ -43,4 +64,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default SignUp;

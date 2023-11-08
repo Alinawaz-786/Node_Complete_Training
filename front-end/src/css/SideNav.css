@@ -1,0 +1,32 @@
+/* src/SideNav.css */
+
+.sidenav {
+    background-color: #333;
+    color: #fff;
+    width: 250px;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+  }
+  
+  .sidenav-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .sidenav-item {
+    padding: 10px;
+  }
+  
+  .sidenav-item a {
+    text-decoration: none;
+    color: #fff;
+    display: block;
+    transition: 0.3s;
+  }
+  
+  .sidenav-item a:hover {
+    background-color: #00aaff;
+    color: #fff;
+  }
+  
