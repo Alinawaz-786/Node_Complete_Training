@@ -1,31 +1,57 @@
 // src/ProductForm.tsx
 
-import React from 'react';
-import './ProductForm.css';
+import '../css/ProductForm.css';
+import { Link } from 'react-router-dom';
+import { useMyContext } from '../context/DataContext';
 
-const ProductForm: React.FC = () => {
+const ProductForm = () => {
+  const { post } = useMyContext();
+  /**
+    const url = "http://localhost:4000/api/getAll";
+    const [data, setData] = useState<any[]>([]);
+    const fetchInfo = () => {
+    return fetch(url)
+      .then((res) => res.json())
+      .then((d) => {
+        setData(d.post)
+      })
+  }
+  useEffect(() => {
+    console.log(post);
+    fetchInfo();
+  }, []);   
+   */
+
   return (
     <div className="product-form">
-      <h2>Add a New Product</h2>
-      <form>
-        <div className="form-control">
-          <label htmlFor="name">Product Name</label>
-          <input type="text" id="name" placeholder="Enter product name" />
-        </div>
-        <div className="form-control">
-          <label htmlFor="description">Description</label>
-          <textarea id="description" placeholder="Enter product description" />
-        </div>
-        <div className="form-control">
-          <label htmlFor="price">Price</label>
-          <input type="number" id="price" placeholder="Enter product price" />
-        </div>
-        <div className="form-control">
-          <label htmlFor="quantity">Quantity</label>
-          <input type="number" id="quantity" placeholder="Enter product quantity" />
-        </div>
-        <button type="submit">Add Product</button>
-      </form>
+      <Link to="/add-product">Add Product</Link>
+      <h2>Product List</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {post.map((dataObj, index) => {
+            return (
+              <tr key={dataObj._id} >
+                <td>{dataObj._id}|</td>
+                <td>{dataObj.product_name}|</td>
+                <td>{dataObj.price}|</td>
+                <td>{dataObj.qty}|</td>
+                <td>waiting...</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+
     </div>
   );
 };

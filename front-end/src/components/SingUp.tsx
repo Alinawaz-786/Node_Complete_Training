@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import '../css/auth.css';
 
 
-const SignUp: React.FC = () => {
+const SignUp = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

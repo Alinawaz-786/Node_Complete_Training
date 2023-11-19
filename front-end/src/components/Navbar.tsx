@@ -2,15 +2,14 @@
 
 import React from 'react';
 import '../css/Navbar.css';
+import { Link } from 'react-router-dom';
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
   return (
     <nav className="navbar">
       <ul className="navbar-nav">
         <li className="nav-item">
-          <a href="#" className="nav-link">
-            Home
-          </a>
+          <Link to="/product" className="nav-link">Product</Link>
         </li>
         <li className="nav-item">
           <a href="#" className="nav-link">

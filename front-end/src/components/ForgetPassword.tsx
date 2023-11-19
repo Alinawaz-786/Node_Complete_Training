@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/auth.css';
 
-const ForgetPassword: React.FC = () => {
+const ForgetPassword = () => {
   const [email, setEmail] = useState('');
 
   const handleForgetPssword = () => {

@@ -8,16 +8,19 @@ const csrf = require('csurf');
 const flash = require('connect-flash');
 const errorController = require('./controllers/errorController');
 const app = express();
+const cors = require('cors')
 const MONGODB_URL = 'mongodb://localhost:27017/Userdb';
 const multer = require('multer');
+
+app.use(cors())
 
 const store = new MongoDBStore({
     uri: MONGODB_URL,
     collection: 'sessions'
 });
 //CRSF Token setting
-const csrfProtection = csrf();
-//file storage
+// const csrfProtection = csrf();
+// //file storage
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'images');
@@ -39,28 +42,32 @@ const fileFilter = (req, file, cb) => {
     }
 }
 //set the view engine
-app.set("view engine", "ejs");
+// app.set("view engine", "ejs");
+
 //Controller SetUP
 const adminRoutes = require('./routes/admin');
 const ShopRouter = require('./routes/shop');
 const AuthRouter = require('./routes/auth');
-// const UserRouter = require('./routes/userRouter');
+const FeedRouter = require('./routes/api/feed');
+const UserRouter = require('./routes/userRouter');
 const cron = require('./crons/cronJob');
 const {join} = require('path');
 const User = require('./models/user');
 
-app.use(bodyParser.urlencoded({extended: false}));
-// app.use(multer({dest: 'images'}).single('image'));
+// app.use(bodyParser.urlencoded({extended: false}));
+// API BODY JSON PARSE
+app.use(bodyParser.json());
+app.use(multer({dest: 'images'}).single('image'));
 app.use(multer({dest: 'images', fileFilter: fileFilter}).single('image'));
-// app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('image'));
+app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('image'));
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.static(path.join(__dirname, 'images')))
-
 app.use(session({secret: 'secret', resave: true, saveUninitialized: true, store: store})); //Session setup
 
-app.use(csrfProtection);
+// app.use(csrfProtection);
 app.use(flash());
 
+app.use('/api', FeedRouter);
 app.use('/admin', adminRoutes);
 app.use(ShopRouter);
 app.use(AuthRouter);
@@ -89,7 +96,7 @@ app.use((req, res, next) => {
     });
 });
 
-//Error Page Load
+// Error Page Load
 app.get('/500', errorController.get500);
 app.use(errorController.get404);
 

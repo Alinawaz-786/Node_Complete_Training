@@ -1,9 +1,9 @@
 // src/Footer.tsx
 
 import React from 'react';
-import './Footer.css';
+import '../css/Footer.css';
 
-const Footer: React.FC = () => {
+const Footer = () => {
   return (
     <footer className="footer">
       <p>&copy; 2023 Your Company. All rights reserved.</p>
