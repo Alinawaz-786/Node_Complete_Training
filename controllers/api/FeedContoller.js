@@ -12,16 +12,17 @@ exports.getProducts = (req, res, next) => {
     });
 }
 exports.createProduct = (req, res, next) => {
-    console.log("gooooooooooo");
-    const product_name = req.body.productName;
-    const description = req.body.description;
-    const price = req.body.price;
+
+    const _id = req.body._id;
     const qty = req.body.qty;
-    console.log(qty);
-    // res.status(200).json({
-    //     message:['Post Create Successfully'],
-    //     post: [{ "_id": 2, product_name: product_name, description: description, price: price, qty: qty, "createdAt": new Date() }]
-    // });
+    const price = req.body.price;
+    const description = req.body.description;
+    const product_name = req.body.productName;
+
+    res.status(200).json({
+        message: ['Product Create Successfully'],
+        product: { "_id": _id, qty: qty, price: price, "createdAt": new Date(), description: description, product_name: product_name }
+    });
 }
 
 

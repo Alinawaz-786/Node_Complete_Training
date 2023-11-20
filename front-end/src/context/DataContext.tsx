@@ -73,8 +73,9 @@ export const MyProvider = ({ children }: any) => {
         .then((res) => res.json())
         .then((d) => {
           // setData()
-
-          setPost([...post, d.post]);
+          console.log("This is ",d.product);
+          setPost([...post, d.product]);
+          console.log(post);
           setQty('');
           setPrice('');
           setProductName('');
