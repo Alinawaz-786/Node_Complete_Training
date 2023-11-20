@@ -51,18 +51,18 @@ const AuthRouter = require('./routes/auth');
 const FeedRouter = require('./routes/api/feed');
 const UserRouter = require('./routes/userRouter');
 const cron = require('./crons/cronJob');
-const {join} = require('path');
+const { join } = require('path');
 const User = require('./models/user');
 
 // app.use(bodyParser.urlencoded({extended: false}));
 // API BODY JSON PARSE
 app.use(bodyParser.json());
-app.use(multer({dest: 'images'}).single('image'));
-app.use(multer({dest: 'images', fileFilter: fileFilter}).single('image'));
-app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('image'));
+app.use(multer({ dest: 'images' }).single('image'));
+app.use(multer({ dest: 'images', fileFilter: fileFilter }).single('image'));
+app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.static(path.join(__dirname, 'images')))
-app.use(session({secret: 'secret', resave: true, saveUninitialized: true, store: store})); //Session setup
+app.use(session({ secret: 'secret', resave: true, saveUninitialized: true, store: store })); //Session setup
 
 // app.use(csrfProtection);
 app.use(flash());
@@ -71,6 +71,13 @@ app.use('/api', FeedRouter);
 app.use('/admin', adminRoutes);
 app.use(ShopRouter);
 app.use(AuthRouter);
+
+app.use((error, req, res, next) => {
+    console.log(error);
+    const status = error.statusCode || 500;
+    const message = error.message;
+    res.status(status).json({ message: message });
+});
 
 app.use((req, res, next) => {
     res.locals.isAuthenticated = req.session.isLoggedIn;
@@ -89,11 +96,11 @@ app.use((req, res, next) => {
             req.user = user;
             next();
         }).catch(err => {
-        /*
-        * Throw error if database connection issue
-        */
-        next(Error(err));
-    });
+            /*
+            * Throw error if database connection issue
+            */
+            next(Error(err));
+        });
 });
 
 // Error Page Load

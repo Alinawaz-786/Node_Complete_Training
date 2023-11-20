@@ -15,15 +15,21 @@ const productSchema = new Schema({
         type: String,
         required: true
     },
+    qty: {
+        type: Number,
+        required: true
+    },
     imgUrl: {
         type: String,
         required: true
     },
     user_id: {
         type: String,
-        required: true
-    }
-});
+        // required: true
+    },
+},
+    { timestamps: true }
+);
 
 module.exports = mongoose.model('Product', productSchema);
 

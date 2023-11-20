@@ -6,6 +6,7 @@ type MyContextType = {
     _id: number,
     qty: number,
     price: number,
+    image: string,
     createdAt: string
     description: string,
     product_name: string,
@@ -14,11 +15,13 @@ type MyContextType = {
   setPrice: Dispatch<SetStateAction<string>>;
   setProductName: Dispatch<SetStateAction<string>>;
   setDescription: Dispatch<SetStateAction<string>>;
+  setImage: Dispatch<SetStateAction<string>>;
 
   qty: string;
   price: string;
   description: string;
   productName: string;
+  image: string;
   handleSubmit: (e: any) => void;
 
 };
@@ -28,6 +31,7 @@ interface IProductProps {
   qty: number,
   price: number,
   createdAt: string
+  image: string
   description: string,
   product_name: string,
 }
@@ -43,6 +47,7 @@ export const MyProvider = ({ children }: any) => {
   const [price, setPrice] = useState('');
   const [productName, setProductName] = useState('');
   const [description, setDescription] = useState('');
+  const [image, setImage] = useState('');
 
   const handleSubmit = async (e: any) => {
   const url = "http://localhost:4000/api/create-product";
@@ -67,7 +72,8 @@ export const MyProvider = ({ children }: any) => {
           productName: productName,
           description: description,
           price: price,
-          qty: qty
+          qty: qty,
+          image:image,
         })
       })
         .then((res) => res.json())
@@ -104,7 +110,7 @@ export const MyProvider = ({ children }: any) => {
   }, [])
 
 
-  return (<MyContext.Provider value={{ post, setQty, setPrice, setProductName, setDescription, qty, price, description, productName, handleSubmit }}>{children}</MyContext.Provider>);
+  return (<MyContext.Provider value={{ post, setQty, setPrice, setProductName, setDescription,setImage, qty, price, description, productName,image, handleSubmit }}>{children}</MyContext.Provider>);
 };
 
 export const useMyContext = () => {
