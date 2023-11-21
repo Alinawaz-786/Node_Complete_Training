@@ -38,7 +38,7 @@
                                         <%= products.description %>
                                     </td>
                                     <td>
-                                        <input type="hidden" name="productName" value="<%= products.title %>">
+                                        <input type="hidden" name="title" value="<%= products.title %>">
                                         <input type="hidden" name="productId" value="<%= products._id %>">
                                         <a href="/admin/edit-product/<%= products._id %>">Edit</a> |
                                         <a href="/admin/delete-product/<%= products._id %>">Delete</a> |

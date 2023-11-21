@@ -9,18 +9,18 @@ type MyContextType = {
     image: string,
     createdAt: string
     description: string,
-    product_name: string,
+    title: string,
   }>,
   setQty: Dispatch<SetStateAction<string>>;
   setPrice: Dispatch<SetStateAction<string>>;
-  setProductName: Dispatch<SetStateAction<string>>;
+  setTitle: Dispatch<SetStateAction<string>>;
   setDescription: Dispatch<SetStateAction<string>>;
   setImage: Dispatch<SetStateAction<string>>;
 
   qty: string;
   price: string;
   description: string;
-  productName: string;
+  title: string;
   image: string;
   handleSubmit: (e: any) => void;
 
@@ -33,7 +33,7 @@ interface IProductProps {
   createdAt: string
   image: string
   description: string,
-  product_name: string,
+  title: string,
 }
 
 const MyContext = createContext<MyContextType | undefined>(undefined);
@@ -45,7 +45,7 @@ export const MyProvider = ({ children }: any) => {
 
   const [qty, setQty] = useState('');
   const [price, setPrice] = useState('');
-  const [productName, setProductName] = useState('');
+  const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState('');
 
@@ -55,7 +55,7 @@ export const MyProvider = ({ children }: any) => {
     e.preventDefault()
     const id = post.length ? post[post.length - 1]._id + 1 : 1;
     // const newPost: any = {
-    //   id, productName: productName,
+    //   id, title: title,
     //   description: description, price: price, qty: qty
     // };
     try {
@@ -69,7 +69,7 @@ export const MyProvider = ({ children }: any) => {
         },
         body: JSON.stringify({
           _id:id,
-          productName: productName,
+          title: title,
           description: description,
           price: price,
           qty: qty,
@@ -84,7 +84,7 @@ export const MyProvider = ({ children }: any) => {
           console.log(post);
           setQty('');
           setPrice('');
-          setProductName('');
+          setTitle('');
           setDescription('');
         })
 
@@ -110,7 +110,7 @@ export const MyProvider = ({ children }: any) => {
   }, [])
 
 
-  return (<MyContext.Provider value={{ post, setQty, setPrice, setProductName, setDescription,setImage, qty, price, description, productName,image, handleSubmit }}>{children}</MyContext.Provider>);
+  return (<MyContext.Provider value={{ post, setQty, setPrice, setTitle, setDescription,setImage, qty, price, description, title,image, handleSubmit }}>{children}</MyContext.Provider>);
 };
 
 export const useMyContext = () => {

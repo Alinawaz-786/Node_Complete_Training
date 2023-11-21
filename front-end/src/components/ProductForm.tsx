@@ -42,10 +42,10 @@ const ProductForm = () => {
             return (
               <tr key={dataObj._id} >
                 <td>{dataObj._id}|</td>
-                <td>{dataObj.product_name}|</td>
+                <td>{dataObj.title}|</td>
                 <td>{dataObj.price}|</td>
                 <td>{dataObj.qty}|</td>
-                <td>waiting...</td>
+                {/* <td><a href="#" onClick={}>View</a></td> */}
               </tr>
             );
           })}

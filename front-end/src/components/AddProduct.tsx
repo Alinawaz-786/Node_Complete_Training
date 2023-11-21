@@ -5,9 +5,9 @@ import { useMyContext } from '../context/DataContext';
 
 
 const AddProduct = () => {
-  const { setQty, setPrice, setProductName, setDescription, setImage, qty, price, description, productName, image, handleSubmit } = useMyContext();
+  const { setQty, setPrice, setTitle, setDescription, setImage, qty, price, description, title, image, handleSubmit } = useMyContext();
   /*
-  const [productName, setProductName] = useState("");
+  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [qty, setQty] = useState("");
@@ -23,7 +23,7 @@ const AddProduct = () => {
         'Content-Type':'application/json'
       },
       body:JSON.stringify({
-        productName:productName,
+        title:title,
         description:description,
         price:price,
         qty:qty
@@ -42,7 +42,7 @@ const AddProduct = () => {
       <form action="" method="post" onSubmit={handleSubmit} >
         <div className="form-control">
           <label htmlFor="name">Product Name</label>
-          <input type="text" id="name" value={productName} placeholder="Enter product name" onChange={(e) => setProductName(e.target.value)} />
+          <input type="text" id="name" value={title} placeholder="Enter product name" onChange={(e) => setTitle(e.target.value)} />
         </div>
         <div className="form-control">
           <label htmlFor="description">Description</label>

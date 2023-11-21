@@ -8,25 +8,24 @@ const User = require('../../models/user');
 
 
 exports.getProducts = (req, res, next) => {
-    const product = new Product();
-    Product.fetchAll().then(products => {
-    console.log(product);
-        
-    }) .catch(err => {
+    Product.find().then(products => {
+        console.log(products);
+        res.status(200).json({
+            post: products
+        })
+    }).catch(err => {
         const error = new Error(err);
         error.httpStatusCode = 500;
         return next(error)
     });
 
-    res.status(200).json({
-        post: [{ "_id": 1, product_name: "Laptop", description: "This is the testing.", price: "12", qty: "2", "createdAt": new Date() }]
-    });
+
 }
 exports.createProduct = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const error = new Error('Validation failed enteres data');
-        error.statusCode =  422;
+        error.statusCode = 422;
         throw error;
 
         // return res.status(422).json({
@@ -38,13 +37,13 @@ exports.createProduct = (req, res, next) => {
     const qty = req.body.qty;
     const price = req.body.price;
     const description = req.body.description;
-    const product_name = req.body.productName;
+    const title = req.body.title;
     const imgUrl = req.body.image;
 
     const product = new Product({
         qty: qty,
         price: price,
-        title: product_name,
+        title: title,
         description: description,
         imgUrl: imgUrl,
     })
@@ -60,6 +59,22 @@ exports.createProduct = (req, res, next) => {
     //     }
     //     next(err);
     // })
+}
+
+exports.getProduct = (req, res, next) => {
+    const product_id = req.params.product_id;
+    Product.findById(product_id).then(product => {
+        if (!product) {
+            const error = new Error('Could not find Product');
+            error.statusCode = 404;
+            throw error;
+        }
+    }).catch(err => {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    });
 }
 
 
