@@ -9,7 +9,6 @@ const User = require('../../models/user');
 
 exports.getProducts = (req, res, next) => {
     Product.find().then(products => {
-        console.log(products);
         res.status(200).json({
             post: products
         })
@@ -22,6 +21,8 @@ exports.getProducts = (req, res, next) => {
 
 }
 exports.createProduct = (req, res, next) => {
+
+    console.log("gggggggggggggggggggggggggg");
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const error = new Error('Validation failed enteres data');
@@ -33,12 +34,18 @@ exports.createProduct = (req, res, next) => {
         //     errors: errors.array()
         // })
     }
+    if(!req.file){
+        const error = new Error('Validation failed enteres data');
+        error.statusCode = 422;
+        throw error;
+
+    }
 
     const qty = req.body.qty;
     const price = req.body.price;
     const description = req.body.description;
     const title = req.body.title;
-    const imgUrl = req.body.image;
+    const imgUrl = req.file.path;
 
     const product = new Product({
         qty: qty,
@@ -69,6 +76,10 @@ exports.getProduct = (req, res, next) => {
             error.statusCode = 404;
             throw error;
         }
+        res.status(200).json({
+            product: product
+        })
+
     }).catch(err => {
         if (!err.statusCode) {
             err.statusCode = 500;

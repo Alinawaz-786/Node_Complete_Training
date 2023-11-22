@@ -53,28 +53,41 @@ export const MyProvider = ({ children }: any) => {
   const url = "http://localhost:4000/api/create-product";
 
     e.preventDefault()
-    const id = post.length ? post[post.length - 1]._id + 1 : 1;
+    // const id = post.length ? post[post.length - 1]._id + 1 : 1;
     // const newPost: any = {
     //   id, title: title,
     //   description: description, price: price, qty: qty
     // };
+
+    const formData = new FormData();
+    formData.append("title",title)
+    formData.append("description",description)
+    formData.append("price",price)
+    formData.append("qty",qty)
+    // formData.append("image",image)
+    console.log(formData);
+    
     try {
 
       // const response = await api.post('/posts', newPost)
       let method = 'POST';
       fetch(url, {
         method: method,
-        headers: {
-          'Content-Type': 'application/json'
+        headers:  {
+          'Content-Type': `multipart/form-data; boundary=${formData.getBoundary()}`,
         },
-        body: JSON.stringify({
-          _id:id,
-          title: title,
-          description: description,
-          price: price,
-          qty: qty,
-          image:image,
-        })
+        // headers: {
+        //   'Content-Type': 'application/json'
+        // },
+        body: formData,
+        // body: JSON.stringify({
+        //   _id:id,
+        //   title: title,
+        //   description: description,
+        //   price: price,
+        //   qty: qty,
+        //   image:image,
+        // })
       })
         .then((res) => res.json())
         .then((d) => {

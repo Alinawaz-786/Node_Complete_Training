@@ -6,6 +6,7 @@ import { useMyContext } from '../context/DataContext';
 
 const ProductForm = () => {
   const { post } = useMyContext();
+
   /**
     const url = "http://localhost:4000/api/getAll";
     const [data, setData] = useState<any[]>([]);
@@ -41,11 +42,11 @@ const ProductForm = () => {
           {post.map((dataObj, index) => {
             return (
               <tr key={dataObj._id} >
-                <td>{dataObj._id}|</td>
-                <td>{dataObj.title}|</td>
-                <td>{dataObj.price}|</td>
-                <td>{dataObj.qty}|</td>
-                {/* <td><a href="#" onClick={}>View</a></td> */}
+                <td>{String(dataObj._id).slice(0, 3)}</td>
+                <td>{dataObj.title}</td>
+                <td>{dataObj.price}</td>
+                <td>{dataObj.qty}</td>
+                <td>                  <Link to={"/product/" + dataObj._id}>View</Link></td>
               </tr>
             );
           })}
