@@ -22,7 +22,7 @@ exports.getProducts = (req, res, next) => {
 }
 exports.createProduct = (req, res, next) => {
 
-    console.log("gggggggggggggggggggggggggg");
+    console.log("gggggggggggggggggggggggggg",req.file);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const error = new Error('Validation failed enteres data');
@@ -34,12 +34,12 @@ exports.createProduct = (req, res, next) => {
         //     errors: errors.array()
         // })
     }
-    if(!req.file){
-        const error = new Error('Validation failed enteres data');
-        error.statusCode = 422;
-        throw error;
+    // if(!req.file){
+    //     const error = new Error('Validation failed enteres data');
+    //     error.statusCode = 422;
+    //     throw error;
 
-    }
+    // }
 
     const qty = req.body.qty;
     const price = req.body.price;
@@ -47,6 +47,7 @@ exports.createProduct = (req, res, next) => {
     const title = req.body.title;
     const imgUrl = req.file.path;
 
+    console.log(imgUrl);
     const product = new Product({
         qty: qty,
         price: price,

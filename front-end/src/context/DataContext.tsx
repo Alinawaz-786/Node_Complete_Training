@@ -15,13 +15,13 @@ type MyContextType = {
   setPrice: Dispatch<SetStateAction<string>>;
   setTitle: Dispatch<SetStateAction<string>>;
   setDescription: Dispatch<SetStateAction<string>>;
-  setImage: Dispatch<SetStateAction<string>>;
+  setImage: Dispatch<SetStateAction<File | any>>;
 
   qty: string;
   price: string;
   description: string;
   title: string;
-  image: string;
+  image: File | any;
   handleSubmit: (e: any) => void;
 
 };
@@ -47,7 +47,7 @@ export const MyProvider = ({ children }: any) => {
   const [price, setPrice] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState<File | any>(null);
 
   const handleSubmit = async (e: any) => {
   const url = "http://localhost:4000/api/create-product";
@@ -74,7 +74,7 @@ export const MyProvider = ({ children }: any) => {
       fetch(url, {
         method: method,
         headers:  {
-          'Content-Type': `multipart/form-data; boundary=${formData.getBoundary()}`,
+          'Content-Type': `multipart/form-data;`,
         },
         // headers: {
         //   'Content-Type': 'application/json'

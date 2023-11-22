@@ -50,7 +50,7 @@ const AddProduct = () => {
         </div>
         <div className="form-control">
           <label htmlFor="image">image</label>
-          <input type="file" name="image" accept="image/*" id="image" value={image} placeholder="Enter product name" onChange={(e) => setImage(e.target.value)} />
+          <input type="file" name="image" accept="image/*" id="image" onChange={(e) => setImage((e.target as HTMLInputElement)?.files?.[0])}/>
 
         </div>
         <div className="form-control">
