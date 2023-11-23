@@ -22,7 +22,6 @@ exports.getProducts = (req, res, next) => {
 }
 exports.createProduct = (req, res, next) => {
 
-    console.log("gggggggggggggggggggggggggg",req.file);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const error = new Error('Validation failed enteres data');
@@ -34,12 +33,12 @@ exports.createProduct = (req, res, next) => {
         //     errors: errors.array()
         // })
     }
-    // if(!req.file){
-    //     const error = new Error('Validation failed enteres data');
-    //     error.statusCode = 422;
-    //     throw error;
+    if(!req.file){
+        const error = new Error('Validation failed enteres image');
+        error.statusCode = 422;
+        throw error;
 
-    // }
+    }
 
     const qty = req.body.qty;
     const price = req.body.price;
@@ -47,26 +46,26 @@ exports.createProduct = (req, res, next) => {
     const title = req.body.title;
     const imgUrl = req.file.path;
 
-    console.log(imgUrl);
+    console.log("---------------------------------------------------------",imgUrl);
+    console.log(req.body);
     const product = new Product({
         qty: qty,
         price: price,
         title: title,
         description: description,
-        imgUrl: imgUrl,
     })
     console.log(product);
-    // product.save().then(result => {
-    //     res.status(200).json({
-    //         message: ['Product Create Successfully'],
-    //         product: result
-    //     });
-    // }).catch(err => {
-    //     if(!err.statusCode){
-    //         err.statusCode= 500;
-    //     }
-    //     next(err);
-    // })
+    product.save().then(result => {
+        res.status(200).json({
+            message: ['Product Create Successfully'],
+            product: result
+        });
+    }).catch(err => {
+        if(!err.statusCode){
+            err.statusCode= 500;
+        }
+        next(err);
+    })
 }
 
 exports.getProduct = (req, res, next) => {

@@ -64,8 +64,8 @@ export const MyProvider = ({ children }: any) => {
     formData.append("description",description)
     formData.append("price",price)
     formData.append("qty",qty)
-    // formData.append("image",image)
-    console.log(formData);
+    formData.append("image",image  as File)
+    console.log(image);
     
     try {
 
@@ -73,9 +73,9 @@ export const MyProvider = ({ children }: any) => {
       let method = 'POST';
       fetch(url, {
         method: method,
-        headers:  {
-          'Content-Type': `multipart/form-data;`,
-        },
+        // headers:  {
+        //   'Content-Type': `multipart/form-data;`,
+        // },
         // headers: {
         //   'Content-Type': 'application/json'
         // },
@@ -92,13 +92,13 @@ export const MyProvider = ({ children }: any) => {
         .then((res) => res.json())
         .then((d) => {
           // setData()
-          console.log("This is ",d.product);
-          setPost([...post, d.product]);
-          console.log(post);
-          setQty('');
-          setPrice('');
-          setTitle('');
-          setDescription('');
+          // console.log("This is ",d.product);
+          // setPost([...post, d.product]);
+          // console.log(post);
+          // setQty('');
+          // setPrice('');
+          // setTitle('');
+          // setDescription('');
         })
 
 

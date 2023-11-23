@@ -18,7 +18,7 @@ function App() {
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/product/:id" element={<ProductDetail />} />
         </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </div>
     </MyProvider>
   );

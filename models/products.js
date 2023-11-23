@@ -21,7 +21,6 @@ const productSchema = new Schema({
     },
     imgUrl: {
         type: String,
-        required: true
     },
     user_id: {
         type: String,
