@@ -6,7 +6,25 @@ import { useMyContext } from '../context/DataContext';
 
 const ProductForm = () => {
   const { post } = useMyContext();
+  
+  const handleDelete = (id:number) => {
+    const url = `http://localhost:4000/api/delete/${id}`;
+    try {
+      let method = 'DELETE';
+      fetch(url, {
+        method: method,
+      })
+        .then((res) => res.json())
+        .then((d) => {
+          console.log("This is ",d);
+     
+        })
 
+
+    } catch (error) {
+      console.log(error)
+    }
+  };
   /**
     const url = "http://localhost:4000/api/getAll";
     const [data, setData] = useState<any[]>([]);
@@ -46,7 +64,10 @@ const ProductForm = () => {
                 <td>{dataObj.title}</td>
                 <td>{dataObj.price}</td>
                 <td>{dataObj.qty}</td>
-                <td>                  <Link to={"/product/" + dataObj._id}>View</Link></td>
+                <td>
+                  <Link to={"/product/" + dataObj._id}>View</Link> |
+                  <a href="#" onClick={() => handleDelete(dataObj._id)}>Delete</a>
+                </td>
               </tr>
             );
           })}

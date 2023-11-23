@@ -1,5 +1,6 @@
 // MyContext.tsx
 import React, { createContext, useContext, useState, useEffect, Dispatch, SetStateAction } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type MyContextType = {
   post: Array<{
@@ -49,6 +50,8 @@ export const MyProvider = ({ children }: any) => {
   const [description, setDescription] = useState('');
   const [image, setImage] = useState<File | any>(null);
 
+  const navigationHistory = useNavigate()
+
   const handleSubmit = async (e: any) => {
   const url = "http://localhost:4000/api/create-product";
 
@@ -91,18 +94,17 @@ export const MyProvider = ({ children }: any) => {
       })
         .then((res) => res.json())
         .then((d) => {
-          // setData()
-          // console.log("This is ",d.product);
-          // setPost([...post, d.product]);
-          // console.log(post);
-          // setQty('');
-          // setPrice('');
-          // setTitle('');
-          // setDescription('');
+          console.log("This is ",d.product);
+          setPost([...post, d.product]);
+          console.log(post);
+          setQty('');
+          setPrice('');
+          setTitle('');
+          setDescription('');
+          navigationHistory('/product');
         })
 
 
-      // navigationHistory('/home');
     } catch (error) {
       console.log(error)
     }
