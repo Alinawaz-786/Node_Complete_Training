@@ -3,7 +3,7 @@ const express = require('express');
 const feedContoller = require('../../controllers/api/FeedContoller');
 const router = express.Router();
 const multer = require("multer");
-// const path = require("path");
+const isAuth = require("../../middleware/is-apiAuth");
 
 const storage = multer.diskStorage({
     destination: './upload/images',
@@ -23,8 +23,8 @@ const upload = multer({
 }).single("image");
 
 
-router.get('/getAll', feedContoller.getProducts);
-router.post('/create-product', upload,  feedContoller.createProduct);
+router.get('/getAll', isAuth, feedContoller.getProducts);
+router.post('/create-product', upload, feedContoller.createProduct);
 router.get('/product/:product_id', feedContoller.getProduct);
 router.delete('/delete/:product_id', feedContoller.delete);
 
