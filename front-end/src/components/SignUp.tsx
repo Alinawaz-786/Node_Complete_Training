@@ -11,10 +11,41 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
 
-  const handleLogin = () => {
-    // Add your login logic here
-    console.log('Username:', username);
-    console.log('Password:', password);
+  const handleLogin = (e:any) => {
+    e.preventDefault()
+    const url = "http://localhost:4000/api/signup";
+    try {
+      console.log(email,password);
+      
+      let method = 'POST';
+      fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email,
+          name: username,
+          password: password,
+          repeatPassword: repeatPassword,
+        })
+      })
+        .then((res) => res.json())
+        .then((d) => {
+          console.log("This is ",d.userId,d.message);
+          // setPost([...post, d.product]);
+          // console.log(post);
+          // setQty('');
+          // setPrice('');
+          // setTitle('');
+          // setDescription('');
+          // navigationHistory('/product');
+        })
+
+
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (

@@ -18,6 +18,15 @@ type MyContextType = {
   setDescription: Dispatch<SetStateAction<string>>;
   setImage: Dispatch<SetStateAction<File | any>>;
 
+  setEmail: Dispatch<SetStateAction<string>>;
+  setPassword: Dispatch<SetStateAction<string>>;
+  setToken: Dispatch<SetStateAction<string>>;
+
+  email: string;
+  password: string;
+  token: string;
+  handleLogin: (e: any) => void;
+
   qty: string;
   price: string;
   description: string;
@@ -43,6 +52,9 @@ export const MyProvider = ({ children }: any) => {
   const url = "http://localhost:4000/api/getAll";
   const [post, setPost] = useState<Array<IProductProps>>([]);
 
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [token, setToken] = useState<string>('');
 
   const [qty, setQty] = useState('');
   const [price, setPrice] = useState('');
@@ -52,8 +64,36 @@ export const MyProvider = ({ children }: any) => {
 
   const navigationHistory = useNavigate()
 
+  const handleLogin = async (e: any) => {
+    const url = "http://localhost:4000/api/login";
+    e.preventDefault()
+
+    try {
+      console.log(email, password);
+
+      let method = 'POST';
+      fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        })
+      })
+        .then((res) => res.json())
+        .then((d) => {
+          setToken(d.token)
+          console.log("This is ", d.token, d.userId);
+        })
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
   const handleSubmit = async (e: any) => {
-  const url = "http://localhost:4000/api/create-product";
+    const url = "http://localhost:4000/api/create-product";
 
     e.preventDefault()
     // const id = post.length ? post[post.length - 1]._id + 1 : 1;
@@ -63,13 +103,13 @@ export const MyProvider = ({ children }: any) => {
     // };
 
     const formData = new FormData();
-    formData.append("title",title)
-    formData.append("description",description)
-    formData.append("price",price)
-    formData.append("qty",qty)
-    formData.append("image",image  as File)
+    formData.append("title", title)
+    formData.append("description", description)
+    formData.append("price", price)
+    formData.append("qty", qty)
+    formData.append("image", image as File)
     console.log(image);
-    
+
     try {
 
       // const response = await api.post('/posts', newPost)
@@ -94,7 +134,7 @@ export const MyProvider = ({ children }: any) => {
       })
         .then((res) => res.json())
         .then((d) => {
-          console.log("This is ",d.product);
+          console.log("This is ", d.product);
           setPost([...post, d.product]);
           console.log(post);
           setQty('');
@@ -111,9 +151,15 @@ export const MyProvider = ({ children }: any) => {
   };
 
   useEffect(() => {
+    console.log(token);
+    
     const fetchPost = async () => {
       try {
-        return fetch(url)
+        return fetch(url,{
+          headers:{
+            Authorization:'Bearer' + token
+          }
+        })
           .then((res) => res.json())
           .then((d) => {
             console.log(d.post);
@@ -125,7 +171,7 @@ export const MyProvider = ({ children }: any) => {
   }, [])
 
 
-  return (<MyContext.Provider value={{ post, setQty, setPrice, setTitle, setDescription,setImage, qty, price, description, title,image, handleSubmit }}>{children}</MyContext.Provider>);
+  return (<MyContext.Provider value={{ post, setEmail, setPassword, setToken, setQty, setPrice, setTitle, setDescription, setImage, email, password, token, qty, price, description, title, image, handleLogin, handleSubmit }}>{children}</MyContext.Provider>);
 };
 
 export const useMyContext = () => {

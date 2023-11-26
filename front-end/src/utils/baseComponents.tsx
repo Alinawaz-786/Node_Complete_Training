@@ -1,5 +1,5 @@
 export { default as Navbar } from "../components/Navbar";
-export { default as SingUp } from "../components/SingUp";
+export { default as SingUp } from "../components/SignUp";
 export { default as Login } from "../components/Login";
 export { default as ForgetPassword } from "../components/ForgetPassword";
 export { default as ProductForm } from "../components/ProductForm";
