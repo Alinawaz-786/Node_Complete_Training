@@ -54,7 +54,7 @@ export const MyProvider = ({ children }: any) => {
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [token, setToken] = useState<string>('');
+  const [token, setToken] = useState<any>('');
 
   const [qty, setQty] = useState('');
   const [price, setPrice] = useState('');
@@ -84,8 +84,10 @@ export const MyProvider = ({ children }: any) => {
       })
         .then((res) => res.json())
         .then((d) => {
-          setToken(d.token)
-          console.log("This is ", d.token, d.userId);
+          localStorage.setItem('itemName', d.token)
+          const _token = localStorage.getItem('itemName')
+          setToken(_token)
+          navigationHistory('/product');
         })
     } catch (error) {
       console.log(error)
@@ -94,14 +96,7 @@ export const MyProvider = ({ children }: any) => {
   }
   const handleSubmit = async (e: any) => {
     const url = "http://localhost:4000/api/create-product";
-
     e.preventDefault()
-    // const id = post.length ? post[post.length - 1]._id + 1 : 1;
-    // const newPost: any = {
-    //   id, title: title,
-    //   description: description, price: price, qty: qty
-    // };
-
     const formData = new FormData();
     formData.append("title", title)
     formData.append("description", description)
@@ -111,26 +106,10 @@ export const MyProvider = ({ children }: any) => {
     console.log(image);
 
     try {
-
-      // const response = await api.post('/posts', newPost)
       let method = 'POST';
       fetch(url, {
         method: method,
-        // headers:  {
-        //   'Content-Type': `multipart/form-data;`,
-        // },
-        // headers: {
-        //   'Content-Type': 'application/json'
-        // },
         body: formData,
-        // body: JSON.stringify({
-        //   _id:id,
-        //   title: title,
-        //   description: description,
-        //   price: price,
-        //   qty: qty,
-        //   image:image,
-        // })
       })
         .then((res) => res.json())
         .then((d) => {
@@ -151,13 +130,12 @@ export const MyProvider = ({ children }: any) => {
   };
 
   useEffect(() => {
-    console.log(token);
-    
+    const _token = localStorage.getItem('itemName')
     const fetchPost = async () => {
       try {
         return fetch(url,{
           headers:{
-            Authorization:'Bearer' + token
+            Authorization:'Bearer ' + _token
           }
         })
           .then((res) => res.json())
@@ -167,7 +145,9 @@ export const MyProvider = ({ children }: any) => {
           })
       } catch (err) { }
     }
-    fetchPost();
+    if(_token){
+      fetchPost();
+    }
   }, [])
 
 
