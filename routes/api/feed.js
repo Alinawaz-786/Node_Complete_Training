@@ -24,9 +24,9 @@ const upload = multer({
 
 
 router.get('/getAll', isAuth, feedContoller.getProducts);
-router.post('/create-product', upload, feedContoller.createProduct);
-router.get('/product/:product_id', feedContoller.getProduct);
-router.delete('/delete/:product_id', feedContoller.delete);
+router.post('/create-product', isAuth, upload, feedContoller.createProduct);
+router.get('/product/:product_id', isAuth, feedContoller.getProduct);
+router.delete('/delete/:product_id', isAuth, feedContoller.delete);
 
 
 

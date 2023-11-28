@@ -1,45 +1,41 @@
 // src/ProductForm.tsx
 
 import '../css/ProductForm.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useMyContext } from '../context/DataContext';
 
 const ProductForm = () => {
-  const { post } = useMyContext();
-  
-  const handleDelete = (id:number) => {
+  const { post, setPost } = useMyContext();
+  const navigationHistory = useNavigate()
+  const handleDelete = (id: number) => {
+    const _token = localStorage.getItem('itemName')
     const url = `http://localhost:4000/api/delete/${id}`;
     try {
       let method = 'DELETE';
       fetch(url, {
         method: method,
+        headers: {
+          Authorization: 'Bearer ' + _token
+        }
       })
         .then((res) => res.json())
         .then((d) => {
-          console.log("This is ",d);
-     
+          removeItem(id);
+          console.log(d.message);
+          navigationHistory('/product');
         })
-
 
     } catch (error) {
       console.log(error)
     }
   };
-  /**
-    const url = "http://localhost:4000/api/getAll";
-    const [data, setData] = useState<any[]>([]);
-    const fetchInfo = () => {
-    return fetch(url)
-      .then((res) => res.json())
-      .then((d) => {
-        setData(d.post)
-      })
-  }
-  useEffect(() => {
-    console.log(post);
-    fetchInfo();
-  }, []);   
-   */
+
+  const removeItem = (itemId: number) => {
+    // Create a new array excluding the object with the specified itemId
+    const updatedItems = post.filter(post => post._id !== itemId);
+    // Update the state with the new array
+    setPost(updatedItems);
+  };
 
   return (
     <div className="product-form">

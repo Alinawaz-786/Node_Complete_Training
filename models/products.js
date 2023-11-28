@@ -23,8 +23,9 @@ const productSchema = new Schema({
         type: String,
     },
     user_id: {
-        type: String,
-        // required: true
+        type: Schema.Types.ObjectId, 
+        ref: 'User', 
+        required: true 
     },
 },
     { timestamps: true }

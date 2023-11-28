@@ -23,11 +23,6 @@ exports.createProduct = (req, res, next) => {
         const error = new Error('Validation failed enteres data');
         error.statusCode = 422;
         throw error;
-
-        // return res.status(422).json({
-        //     message: "Validation failed enteres data",
-        //     errors: errors.array()
-        // })
     }
     if (!req.file) {
         const error = new Error('Validation failed enteres image');
@@ -42,12 +37,16 @@ exports.createProduct = (req, res, next) => {
     const imgUrl = req.file.path;
     const description = req.body.description;
 
+    console.log("000000000000000000000000000000000000000000000");
+    console.log(req.userId);
+
     const product = new Product({
         qty: qty,
         price: price,
         title: title,
         imgUrl: imgUrl,
         description: description,
+        user_id: req.userId,
     })
     product.save().then(result => {
         res.status(200).json({
@@ -84,7 +83,7 @@ exports.getProduct = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
     const product_id = req.params.product_id;
-    console.log(product_id);
+
     Product.findById(product_id).then(product => {
         if (!product) {
             const error = new Error('Could not find Product');
@@ -93,21 +92,21 @@ exports.delete = (req, res, next) => {
         }
         clearImage(product.imgUrl)
         return Product.findByIdAndRemove(product_id);
-    }).then(result =>{
+    }).then(result => {
         res.status(200).json({
             message: "Product Delete"
         })
     })
-    .catch(err => {
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
-        next(err);
+        .catch(err => {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
 
-    })
+        })
 }
 
 const clearImage = filePath => {
-    filePath = path.join(__dirname, '..','..',filePath);
+    filePath = path.join(__dirname, '..', '..', filePath);
     fs.unlink(filePath, err => console.log(err))
 };

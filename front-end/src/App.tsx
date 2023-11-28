@@ -20,8 +20,9 @@ function App() {
 
 
           <Route path="/signup" element={<SingUp />} />
-          <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/add-product" element={<AddProduct />} />
           <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/forget-password" element={<ForgetPassword />} />
         </Routes>
         <Footer />
       </div>

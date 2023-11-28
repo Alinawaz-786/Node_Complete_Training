@@ -2,6 +2,16 @@
 import React, { createContext, useContext, useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+interface IProductProps {
+  _id: number,
+  qty: number,
+  price: number,
+  createdAt: string
+  image: string
+  description: string,
+  title: string,
+}
+
 type MyContextType = {
   post: Array<{
     _id: number,
@@ -12,6 +22,7 @@ type MyContextType = {
     description: string,
     title: string,
   }>,
+  setPost: Dispatch<Array<IProductProps>>;
   setQty: Dispatch<SetStateAction<string>>;
   setPrice: Dispatch<SetStateAction<string>>;
   setTitle: Dispatch<SetStateAction<string>>;
@@ -36,15 +47,7 @@ type MyContextType = {
 
 };
 
-interface IProductProps {
-  _id: number,
-  qty: number,
-  price: number,
-  createdAt: string
-  image: string
-  description: string,
-  title: string,
-}
+
 
 const MyContext = createContext<MyContextType | undefined>(undefined);
 
@@ -95,6 +98,7 @@ export const MyProvider = ({ children }: any) => {
 
   }
   const handleSubmit = async (e: any) => {
+    const _token = localStorage.getItem('itemName')
     const url = "http://localhost:4000/api/create-product";
     e.preventDefault()
     const formData = new FormData();
@@ -109,13 +113,15 @@ export const MyProvider = ({ children }: any) => {
       let method = 'POST';
       fetch(url, {
         method: method,
+        headers:{
+          Authorization:'Bearer ' + _token
+        },
         body: formData,
       })
         .then((res) => res.json())
         .then((d) => {
           console.log("This is ", d.product);
           setPost([...post, d.product]);
-          console.log(post);
           setQty('');
           setPrice('');
           setTitle('');
@@ -151,7 +157,7 @@ export const MyProvider = ({ children }: any) => {
   }, [])
 
 
-  return (<MyContext.Provider value={{ post, setEmail, setPassword, setToken, setQty, setPrice, setTitle, setDescription, setImage, email, password, token, qty, price, description, title, image, handleLogin, handleSubmit }}>{children}</MyContext.Provider>);
+  return (<MyContext.Provider value={{ post, setPost,setEmail, setPassword, setToken, setQty, setPrice, setTitle, setDescription, setImage, email, password, token, qty, price, description, title, image, handleLogin, handleSubmit }}>{children}</MyContext.Provider>);
 };
 
 export const useMyContext = () => {
