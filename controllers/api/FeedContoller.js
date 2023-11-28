@@ -3,18 +3,17 @@ const path = require('path');
 const Product = require('../../models/products');
 const { validationResult } = require('express-validator');
 
-exports.getProducts = (req, res, next) => {
-    Product.find().then(products => {
+exports.getProducts = async (req, res, next) => {
+    try {
+        const _products = await Product.find();
         res.status(200).json({
-            post: products
+            post: _products
         })
-    }).catch(err => {
+    } catch (err) {
         const error = new Error(err);
         error.httpStatusCode = 500;
         return next(error)
-    });
-
-
+    }
 }
 exports.createProduct = (req, res, next) => {
 
@@ -36,9 +35,6 @@ exports.createProduct = (req, res, next) => {
     const title = req.body.title;
     const imgUrl = req.file.path;
     const description = req.body.description;
-
-    console.log("000000000000000000000000000000000000000000000");
-    console.log(req.userId);
 
     const product = new Product({
         qty: qty,
