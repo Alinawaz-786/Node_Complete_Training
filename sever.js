@@ -7,6 +7,9 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
 const errorController = require('./controllers/errorController');
+const graphqlHTTP = require('express-graphql').graphqlHTTP;
+const graphqlSchema = require('./graphql/schema');
+const graphqlResolver = require('./graphql/resolvers');
 const app = express();
 const MONGODB_URL = 'mongodb://localhost:27017/Userdb';
 const multer = require('multer');
@@ -16,7 +19,7 @@ const store = new MongoDBStore({
     collection: 'sessions'
 });
 //CRSF Token setting
-const csrfProtection = csrf();
+// const csrfProtection = csrf();
 //file storage
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -40,10 +43,7 @@ const fileFilter = (req, file, cb) => {
 }
 //set the view engine
 app.set("view engine", "ejs");
-//Controller SetUP
-const adminRoutes = require('./routes/admin');
-const ShopRouter = require('./routes/shop');
-const AuthRouter = require('./routes/auth');
+
 // const UserRouter = require('./routes/userRouter');
 const cron = require('./crons/cronJob');
 const {join} = require('path');
@@ -58,16 +58,12 @@ app.use(express.static(path.join(__dirname, 'images')))
 
 app.use(session({secret: 'secret', resave: true, saveUninitialized: true, store: store})); //Session setup
 
-app.use(csrfProtection);
+// app.use(csrfProtection);
 app.use(flash());
-
-app.use('/admin', adminRoutes);
-app.use(ShopRouter);
-app.use(AuthRouter);
 
 app.use((req, res, next) => {
     res.locals.isAuthenticated = req.session.isLoggedIn;
-    res.locals.csrfToken = req.csrfToken();
+    // res.locals.csrfToken = req.csrfToken();
     next();
 });
 
@@ -90,35 +86,26 @@ app.use((req, res, next) => {
 });
 
 //Error Page Load
-app.get('/500', errorController.get500);
-app.use(errorController.get404);
+// app.get('/500', errorController.get500);
+// app.use(errorController.get404);
 
-app.use((error, req, res, next) => {
-    // res.redirect('/500');
-    res.status(500).render('500',
-        {
-            pageTitle: 'Page Not Found',
-            path: '',
-            isAuthenticated: req.isLogedIn
-        });
-});
+app.use('/graphql',graphqlHTTP({
+    schema:graphqlSchema,
+    rootValue: graphqlResolver,
+    graphiql:true
+}))
+
+// app.use((error, req, res, next) => {
+//     res.status(500).render('500',
+//         {
+//             pageTitle: 'Page Not Found',
+//             path: '',
+//             isAuthenticated: req.isLogedIn
+//         });
+// });
 
 mongoose.set('strictQuery', false);
 mongoose.connect(MONGODB_URL).then(result => {
-    /*
-    * User.findOne().then(user => {
-    *    if (!user) {
-    *        const user = new User({
-    *            name: "Ali",
-    *            email: "ali@nawazgmail.com",
-    *            cart: {
-    *                items: []
-    *            }
-    *        });
-    *        user.save();
-    *    }
-    * })
-    */
     app.listen(4000)
 }).catch(err => {
     console.log(err);
