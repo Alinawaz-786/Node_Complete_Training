@@ -1,8 +1,8 @@
 module.exports = {
-    hello(){
-        return{
-            text:'Hellow World!',
-            views:123
-        };
-    }
+    // hello(){
+    //     return{
+    //         text:'Hellow World!',
+    //         views:123
+    //     };
+    // }
 }

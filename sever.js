@@ -1,88 +1,43 @@
-const path = require('path');
+const cors = require('cors')
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const flash = require('connect-flash');
+const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
-const csrf = require('csurf');
-const flash = require('connect-flash');
 const errorController = require('./controllers/errorController');
+const MONGODB_URL = 'mongodb://localhost:27017/Userdb';
+
+const User = require('./models/user');
+const FeedRouter = require('./routes/api/feed');
+const AuthRouter = require('./routes/api/auth');
 const graphqlHTTP = require('express-graphql').graphqlHTTP;
 const graphqlSchema = require('./graphql/schema');
 const graphqlResolver = require('./graphql/resolvers');
 const app = express();
-const MONGODB_URL = 'mongodb://localhost:27017/Userdb';
-const multer = require('multer');
+
+app.use(cors())
 
 const store = new MongoDBStore({
     uri: MONGODB_URL,
     collection: 'sessions'
 });
-//CRSF Token setting
-// const csrfProtection = csrf();
-//file storage
-const fileStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'images');
-    },
-    filename: (req, file, cb) => {
-        cb(null, new Date().toISOString() + '-' + file.originalname);
-    }
-});
 
-const fileFilter = (req, file, cb) => {
-    if (
-        file.mimetype === 'image/png' ||
-        file.mimetype === 'image/jpg' ||
-        file.mimetype === 'image/jpeg'
-    ) {
-        cb(null, true);
-    } else {
-        cb(null, false);
-    }
-}
-//set the view engine
-app.set("view engine", "ejs");
 
-// const UserRouter = require('./routes/userRouter');
-const cron = require('./crons/cronJob');
-const {join} = require('path');
-const User = require('./models/user');
 
-app.use(bodyParser.urlencoded({extended: false}));
-// app.use(multer({dest: 'images'}).single('image'));
-app.use(multer({dest: 'images', fileFilter: fileFilter}).single('image'));
-// app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('image'));
-app.use(express.static(path.join(__dirname, 'public')))
-app.use(express.static(path.join(__dirname, 'images')))
-
-app.use(session({secret: 'secret', resave: true, saveUninitialized: true, store: store})); //Session setup
-
-// app.use(csrfProtection);
+app.use(bodyParser.json());
+app.use(session({ secret: 'secret', resave: true, saveUninitialized: true, store: store })); //Session setup
 app.use(flash());
 
-app.use((req, res, next) => {
-    res.locals.isAuthenticated = req.session.isLoggedIn;
-    // res.locals.csrfToken = req.csrfToken();
-    next();
-});
+app.use('/api', FeedRouter);
+app.use('/api', AuthRouter);
 
-app.use((req, res, next) => {
-    if (!req.session.user) {
-        next();
-    }
-    // console.log(req.session);
-    let userID = req.session.user ? req.session.user._id : null;
-    User.findById(userID)
-        .then(user => {
-            req.user = user;
-            next();
-        }).catch(err => {
-        /*
-        * Throw error if database connection issue
-        */
-        next(Error(err));
-    });
+app.use((error, req, res, next) => {
+    console.log(error);
+    const status = error.statusCode || 500;
+    const message = error.message;
+    const data = error.data;
+    res.status(status).json({ message: message,data:data });
 });
 
 //Error Page Load
@@ -94,15 +49,6 @@ app.use('/graphql',graphqlHTTP({
     rootValue: graphqlResolver,
     graphiql:true
 }))
-
-// app.use((error, req, res, next) => {
-//     res.status(500).render('500',
-//         {
-//             pageTitle: 'Page Not Found',
-//             path: '',
-//             isAuthenticated: req.isLogedIn
-//         });
-// });
 
 mongoose.set('strictQuery', false);
 mongoose.connect(MONGODB_URL).then(result => {
