@@ -68,7 +68,17 @@ export const MyProvider = ({ children }: any) => {
   const navigationHistory = useNavigate()
 
   const handleLogin = async (e: any) => {
-    const url = "http://localhost:4000/api/login";
+    const graphqlQuery = {
+      query: `{
+        login(email:"${email}",password:"${password}")
+        {
+          token
+          userId
+        }
+      }`
+    };
+
+    const url = "http://localhost:4000/graphql";
     e.preventDefault()
 
     try {
@@ -80,14 +90,23 @@ export const MyProvider = ({ children }: any) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        })
+        body: JSON.stringify(graphqlQuery)
       })
         .then((res) => res.json())
         .then((d) => {
-          localStorage.setItem('itemName', d.token)
+          console.log(d.data.login.token);
+
+          if(d.errors && d.errors[0].status === 422){
+            throw new Error("validation Failed. on Server side response");
+          }
+          if(d.errors && d.errors[0].data){
+            console.log(d.errors[0].data);
+            // throw new Error("validation Failed. on Server side response");
+          }
+          if(d.errors){
+            throw new Error("User login failed");
+          }
+          localStorage.setItem('itemName',d.data.login.token)
           const _token = localStorage.getItem('itemName')
           setToken(_token)
           navigationHistory('/product');
@@ -113,8 +132,8 @@ export const MyProvider = ({ children }: any) => {
       let method = 'POST';
       fetch(url, {
         method: method,
-        headers:{
-          Authorization:'Bearer ' + _token
+        headers: {
+          Authorization: 'Bearer ' + _token
         },
         body: formData,
       })
@@ -139,9 +158,9 @@ export const MyProvider = ({ children }: any) => {
     const _token = localStorage.getItem('itemName')
     const fetchPost = async () => {
       try {
-        return fetch(url,{
-          headers:{
-            Authorization:'Bearer ' + _token
+        return fetch(url, {
+          headers: {
+            Authorization: 'Bearer ' + _token
           }
         })
           .then((res) => res.json())
@@ -151,13 +170,13 @@ export const MyProvider = ({ children }: any) => {
           })
       } catch (err) { }
     }
-    if(_token){
+    if (_token) {
       fetchPost();
     }
   }, [])
 
 
-  return (<MyContext.Provider value={{ post, setPost,setEmail, setPassword, setToken, setQty, setPrice, setTitle, setDescription, setImage, email, password, token, qty, price, description, title, image, handleLogin, handleSubmit }}>{children}</MyContext.Provider>);
+  return (<MyContext.Provider value={{ post, setPost, setEmail, setPassword, setToken, setQty, setPrice, setTitle, setDescription, setImage, email, password, token, qty, price, description, title, image, handleLogin, handleSubmit }}>{children}</MyContext.Provider>);
 };
 
 export const useMyContext = () => {

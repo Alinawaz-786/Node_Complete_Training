@@ -12,7 +12,6 @@ module.exports = buildSchema(`
         creator: User!
         createdAt: String!
         updatedAt: String!
-
     }
 
     type User{
@@ -30,11 +29,28 @@ module.exports = buildSchema(`
         password: String!
     }
 
+    input ProductInputData{
+        title: String!
+        description: String!
+        imgUrl: String!
+    }
+
+    type AuthData{
+        token: String!
+        userId: String!
+    }  
+
+    type RootQuery{
+        login(email: String!, password: String!):AuthData!
+    }   
+
     type RootMutation{
         createUser(userInput: UserInputData) :User!
+        createProduct(productInput: ProductInputData) :Product!
     }
  
     schema{
+        query: RootQuery
         mutation: RootMutation
     }
 `);

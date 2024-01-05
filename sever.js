@@ -37,17 +37,26 @@ app.use((error, req, res, next) => {
     const status = error.statusCode || 500;
     const message = error.message;
     const data = error.data;
-    res.status(status).json({ message: message,data:data });
+    res.status(status).json({ message: message, data: data });
 });
 
 //Error Page Load
 // app.get('/500', errorController.get500);
 // app.use(errorController.get404);
 
-app.use('/graphql',graphqlHTTP({
-    schema:graphqlSchema,
+app.use('/graphql', graphqlHTTP({
+    schema: graphqlSchema,
     rootValue: graphqlResolver,
-    graphiql:true
+    graphiql: true,
+    formatError(err) {
+        if (!err.originalError) {
+            return err;
+        }
+        const error = err.originalError.data;
+        const message = err.message || "An error occurred.";
+        const code = err.originalError.code;
+        return { message: message, status: code, data: error }
+    }
 }))
 
 mongoose.set('strictQuery', false);

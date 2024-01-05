@@ -13,7 +13,21 @@ const SignUp = () => {
 
   const handleLogin = (e:any) => {
     e.preventDefault()
-    const url = "http://localhost:4000/api/signup";
+    const graphqlQuery =  {
+      query:`
+      mutation{
+        createUser(userInput:
+          {email:"${email}",name:"${username}",password:"${password}"})
+        {
+          _id
+          email
+        }
+      }`
+    };
+    //Rest Api
+    // const url = "http://localhost:4000/api/signup";
+    //GraphQl
+    const url = "http://localhost:4000/graphql";
     try {
       console.log(email,password);
       
@@ -23,15 +37,26 @@ const SignUp = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          email: email,
-          name: username,
-          password: password,
-          repeatPassword: repeatPassword,
-        })
+         body: JSON.stringify(graphqlQuery)
+        // body: JSON.stringify({
+        //   email: email,
+        //   name: username,
+        //   password: password,
+        //   repeatPassword: repeatPassword,
+        // })
       })
         .then((res) => res.json())
         .then((d) => {
+          if(d.errors && d.errors[0].status === 422){
+            throw new Error("validation Failed. on Server side response");
+          }
+          if(d.errors && d.errors[0].data){
+            console.log(d.errors[0].data);
+            // throw new Error("validation Failed. on Server side response");
+          }
+          if(d.errors){
+            throw new Error("User Creation failed");
+          }
           console.log("This is ",d.userId,d.message);
           // setPost([...post, d.product]);
           // console.log(post);
