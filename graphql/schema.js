@@ -33,6 +33,8 @@ module.exports = buildSchema(`
         title: String!
         description: String!
         imgUrl: String!
+        price: Int!
+        qty: Int!
     }
 
     type AuthData{

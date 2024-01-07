@@ -19,3 +19,12 @@ mutation{
   }
 }
 
+
+  
+mutation{
+  createProduct(productInput:{title:"Laptop",description:"This is testing description.",
+    imgUrl:"images.png",price:12,qty:2}){
+    _id
+    title
+  }
+}

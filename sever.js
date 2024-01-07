@@ -14,6 +14,7 @@ const AuthRouter = require('./routes/api/auth');
 const graphqlHTTP = require('express-graphql').graphqlHTTP;
 const graphqlSchema = require('./graphql/schema');
 const graphqlResolver = require('./graphql/resolvers');
+const auth = require("./middleware/is-apiAuth.js");
 const app = express();
 
 app.use(cors())
@@ -44,6 +45,7 @@ app.use((error, req, res, next) => {
 // app.get('/500', errorController.get500);
 // app.use(errorController.get404);
 
+app.use(auth);
 app.use('/graphql', graphqlHTTP({
     schema: graphqlSchema,
     rootValue: graphqlResolver,

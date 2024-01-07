@@ -118,15 +118,25 @@ export const MyProvider = ({ children }: any) => {
   }
   const handleSubmit = async (e: any) => {
     const _token = localStorage.getItem('itemName')
-    const url = "http://localhost:4000/api/create-product";
+    let graphqlQuery ={
+      query:`
+    mutation{
+      createProduct(productInput:{title:"${title}",description:"${description}",
+        imgUrl:"${image as File}",price:"${price}",qty:"${qty}"}){
+        _id
+        title
+      }
+    }`};
+
+    const url = "http://localhost:4000/graphql";
     e.preventDefault()
-    const formData = new FormData();
-    formData.append("title", title)
-    formData.append("description", description)
-    formData.append("price", price)
-    formData.append("qty", qty)
-    formData.append("image", image as File)
-    console.log(image);
+    // const formData = new FormData();
+    // formData.append("title", title)
+    // formData.append("description", description)
+    // formData.append("price", price)
+    // formData.append("qty", qty)
+    // formData.append("image", image as File)
+    // console.log(image);
 
     try {
       let method = 'POST';
@@ -135,7 +145,7 @@ export const MyProvider = ({ children }: any) => {
         headers: {
           Authorization: 'Bearer ' + _token
         },
-        body: formData,
+        body: JSON.stringify(graphqlQuery),
       })
         .then((res) => res.json())
         .then((d) => {
