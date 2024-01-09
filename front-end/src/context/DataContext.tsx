@@ -38,8 +38,8 @@ type MyContextType = {
   token: string;
   handleLogin: (e: any) => void;
 
-  qty: string;
-  price: string;
+  qty: number;
+  price: number;
   description: string;
   title: string;
   image: File | any;
@@ -52,15 +52,15 @@ type MyContextType = {
 const MyContext = createContext<MyContextType | undefined>(undefined);
 
 export const MyProvider = ({ children }: any) => {
-  const url = "http://localhost:4000/api/getAll";
+  const url = "http://localhost:4000/graphql";
   const [post, setPost] = useState<Array<IProductProps>>([]);
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [token, setToken] = useState<any>('');
 
-  const [qty, setQty] = useState('');
-  const [price, setPrice] = useState('');
+  const [qty, setQty] = useState<any>('');
+  const [price, setPrice] = useState<any>('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState<File | any>(null);
@@ -96,17 +96,17 @@ export const MyProvider = ({ children }: any) => {
         .then((d) => {
           console.log(d.data.login.token);
 
-          if(d.errors && d.errors[0].status === 422){
+          if (d.errors && d.errors[0].status === 422) {
             throw new Error("validation Failed. on Server side response");
           }
-          if(d.errors && d.errors[0].data){
+          if (d.errors && d.errors[0].data) {
             console.log(d.errors[0].data);
             // throw new Error("validation Failed. on Server side response");
           }
-          if(d.errors){
+          if (d.errors) {
             throw new Error("User login failed");
           }
-          localStorage.setItem('itemName',d.data.login.token)
+          localStorage.setItem('itemName', d.data.login.token)
           const _token = localStorage.getItem('itemName')
           setToken(_token)
           navigationHistory('/product');
@@ -118,13 +118,17 @@ export const MyProvider = ({ children }: any) => {
   }
   const handleSubmit = async (e: any) => {
     const _token = localStorage.getItem('itemName')
-    let graphqlQuery ={
-      query:`
+    let graphqlQuery = {
+      query: `
     mutation{
       createProduct(productInput:{title:"${title}",description:"${description}",
-        imgUrl:"${image as File}",price:"${price}",qty:"${qty}"}){
+        imgUrl:"${image as File}",price:${Number(price)},qty:${Number(qty)}}){
         _id
         title
+        description
+        price
+        qty
+        createdAt
       }
     }`};
 
@@ -143,14 +147,23 @@ export const MyProvider = ({ children }: any) => {
       fetch(url, {
         method: method,
         headers: {
+          'Content-Type': 'application/json',
           Authorization: 'Bearer ' + _token
         },
         body: JSON.stringify(graphqlQuery),
       })
         .then((res) => res.json())
         .then((d) => {
-          console.log("This is ", d.product);
-          setPost([...post, d.product]);
+
+          if (d.errors && d.errors[0].status === 422) {
+            throw new Error("validation Failed. on Server side response");
+          }
+          if (d.errors && d.errors[0].data) {
+            console.log(d.errors[0].data);
+          }
+
+          console.log("This is ", d.data.createProduct);
+          setPost([...post, d.data.createProduct]);
           setQty('');
           setPrice('');
           setTitle('');
@@ -166,17 +179,36 @@ export const MyProvider = ({ children }: any) => {
 
   useEffect(() => {
     const _token = localStorage.getItem('itemName')
+    const graphqlQuery = {
+      query: `{
+        product{
+          product{
+            _id
+            title
+            description
+            qty
+            price
+            createdAt
+          }
+          totalProduct
+        }
+      }`
+    };
+
     const fetchPost = async () => {
       try {
         return fetch(url, {
+          method: "POST",
           headers: {
-            Authorization: 'Bearer ' + _token
-          }
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + _token,
+          },
+          body: JSON.stringify(graphqlQuery),
         })
           .then((res) => res.json())
           .then((d) => {
-            console.log(d.post);
-            setPost(d.post)
+            console.log(d.data.product.product);
+            setPost(d.data.product.product)
           })
       } catch (err) { }
     }

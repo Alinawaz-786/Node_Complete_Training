@@ -58,12 +58,12 @@ module.exports = {
         return { token: token, userId: user._id.toString() }
     },
     createProduct: async function ({ productInput }, req) {
+        console.log("req.isAuth........", req.isAuth, req.userId);
         if (!req.isAuth) {
             const error = new Error('Not Authicated.')
             error.code = 401;
             throw error;
         }
-        console.log(req.isAuth);
         const errors = [];
         console.log('list', productInput);
         if (validator.isEmpty(productInput.title)) {
@@ -80,6 +80,7 @@ module.exports = {
             throw error;
         }
         const user = await User.findById(req.userId);
+        console.log("user...", user);
         if (!user) {
             const error = new Error('Invalid User.')
             error.code = 401;
@@ -92,12 +93,33 @@ module.exports = {
             imgUrl: productInput.imgUrl,
             price: productInput.price,
             qty: productInput.qty,
-            creator:user
+            user_id: req.userId
         });
 
         const createdProduct = await product.save();
 
-        return { ...createdProduct._doc, _id: this.createProduct._id.toString(), createdAt: createProduct.createdAt.toISOString(), updatedAt: createProduct.updatedAt.toISOString() }
+        return { ...createdProduct._doc, _id: createdProduct._id, createdAt: createdProduct.createdAt.toISOString(), updatedAt: createdProduct.updatedAt.toISOString() }
+    },
+    product: async function (args, req) {
+        if (!req.isAuth) {
+            const error = new Error('Not Authicated.')
+            error.code = 401;
+            throw error;
+        }
+        const totalProduct = await Product.find().countDocuments();
+        console.log("length",totalProduct);
+        const products = await Product.find().sort({ createdAt: -1 }).populate('user_id');
 
+        return {
+            product: products.map(p => {
+                return {
+                    ...p._doc,
+                    _id: p._id,
+                    createdAt: p.createdAt.toISOString(),
+                    updatedAt: p.updatedAt.toISOString()
+                };
+            }),
+            totalProduct: totalProduct
+        }
     }
 }
