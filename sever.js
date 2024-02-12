@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
-const rootDir = require('./utils/path');
+const requestError =  require('./controllers/error/404ErrorController');
 
 const app = express();
 
@@ -26,12 +26,6 @@ app.use('/', (req, res, next) => {
 app.use(shopRouter.router);
 app.use('/admin', AdminRouter);
 
-app.use((req, res, next) => {
-    // Before view engine use 
-    // res.status(404).sendFile(path.join(rootDir,'views','errors','404.html'))
-    
-    // After view engine use
-    res.status(404).render('404', { pageTitle: '404 Error' })
-});
+app.use(requestError.NotFound);
 
 app.listen(3000);

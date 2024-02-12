@@ -42,16 +42,21 @@
         .main-header__item a:active,
         .main-header__item a.active {
             color: #6200ff;
+            text-decoration-color: aliceblue;
         }
 
         .form-control label,
-        .form-control input {
+        .form-control input,
+        .form-control textarea
+        {
             display: block;
             width: 100%;
 
         }
 
-        .form-control input {
+        .form-control input,
+        .form-control textarea
+        {
             border: 1px solid #dbc441;
             font: inherit;
             border-radius: 2px;
@@ -79,5 +84,5 @@
         button:hover,
         button:active {
             background-color: #6200ff;
-            ;
+            color: aliceblue;
         }
