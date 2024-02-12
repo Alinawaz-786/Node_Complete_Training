@@ -47,8 +47,6 @@ type MyContextType = {
 
 };
 
-
-
 const MyContext = createContext<MyContextType | undefined>(undefined);
 
 export const MyProvider = ({ children }: any) => {

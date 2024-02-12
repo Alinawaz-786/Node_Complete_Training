@@ -1,5 +1,4 @@
 // src/Footer.tsx
-
 import React from 'react';
 import '../css/Footer.css';
 
