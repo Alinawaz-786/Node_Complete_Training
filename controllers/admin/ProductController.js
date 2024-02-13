@@ -25,12 +25,15 @@ exports.saveItem = (req, res, next) => {
 exports.editItem = (req, res, next) => {
     const product_id =  req.params.id;
     console.log("Product-ID ", product_id);
-    res.render('admin/edit-product', {
-        pageTitle: 'Edit Product',
-        path: 'admin/edit-product',
-        activeShop: true,
-        productCSS: true
+    Product.findById(product_id,product =>{
+        console.log(product);
     });
+    // res.render('admin/edit-product', {
+    //     pageTitle: 'Edit Product',
+    //     path: 'admin/edit-product',
+    //     activeShop: true,
+    //     productCSS: true
+    // });
 }
 
 exports.listItem = (req, res, next) => {

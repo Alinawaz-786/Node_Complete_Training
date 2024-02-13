@@ -3,10 +3,19 @@ const path = require('path');
 const rootDir = require('../utils/path');
 
 const products = [];
-const p = path.join(rootDir, 'data', 'product.json');
+const getProductForFile = cb => {
+    const p = path.join(rootDir, 'data', 'product.json');
+    fs.readFile(p, (err, fileContent) => {
+        if (err) {
+            cb([]);
+        } else {
+            cb(JSON.parse(fileContent));
+        }
+    });
+};
 
 module.exports = class Product {
-    constructor(title,imgUrl,price,description) {
+    constructor(title, imgUrl, price, description) {
         this.title = title;
         this.imgUrl = imgUrl;
         this.price = price;
@@ -14,7 +23,7 @@ module.exports = class Product {
     }
 
     save() {
-        this.id =  Math.random();
+        this.id = Math.random();
         fs.readFile(p, (err, fileContent) => {
             let products = [];
             if (!err) {
@@ -36,6 +45,15 @@ module.exports = class Product {
             cb(JSON.parse(fileContent));
         });
     }
-    static findById(id,cb) {
+
+    static findById(id, cb) {
+        console.log('Id',id)
+        getProductForFile(products => {
+            console.log("inner",products);
+            const product = products.find(p => p.id === id);
+            console.log("outer",product);
+
+            cb(product);
+        });
     }
 };
