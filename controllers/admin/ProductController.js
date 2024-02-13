@@ -1,3 +1,4 @@
+const { log } = require('console');
 const Product = require('../../models/product');
 
 exports.createItem = (req, res, next) => {
@@ -15,11 +16,22 @@ exports.saveItem = (req, res, next) => {
     const imgUrl = req.body.imgUrl;
     const price = req.body.price;
     const description = req.body.description;
-    const product = new Product(title,imgUrl,price,description);
+    const product = new Product(title, imgUrl, price, description);
     product.save();
     res.redirect('/admin/product-list');
 };
 
+
+exports.editItem = (req, res, next) => {
+    const product_id =  req.params.id;
+    console.log("Product-ID ", product_id);
+    res.render('admin/edit-product', {
+        pageTitle: 'Edit Product',
+        path: 'admin/edit-product',
+        activeShop: true,
+        productCSS: true
+    });
+}
 
 exports.listItem = (req, res, next) => {
     const products = Product.fetchAll(products => {

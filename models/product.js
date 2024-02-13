@@ -14,6 +14,7 @@ module.exports = class Product {
     }
 
     save() {
+        this.id =  Math.random();
         fs.readFile(p, (err, fileContent) => {
             let products = [];
             if (!err) {
@@ -34,5 +35,7 @@ module.exports = class Product {
             }
             cb(JSON.parse(fileContent));
         });
+    }
+    static findById(id,cb) {
     }
 };

@@ -11,18 +11,7 @@
 </head>
 
 <body>
-<header class="main-header">
-  <nav class="main-header__nav">
-    <ul class="main-header__item-list">
-      <li class="main-header__item">
-        <a class="active" href="/admin/add-product">Add Product</a>
-      </li>
-      <li class="main-header__item">
-        <a href="/admin/product-list">List</a>
-      </li>
-    </ul>
-  </nav>
-</header>
+  <%- include('../include/navber.ejs') %>
   <div style="display: flex;justify-content: center;margin-top: 5px;margin-bottom: 5px;">
     <% if(productList.length > 0) { %>
     <% for(let item of productList) { %>
