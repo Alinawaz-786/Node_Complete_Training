@@ -5,16 +5,22 @@ const Cart = require('../../models/cart');
 
 
 exports.index = (req, res, next) => {
-    Product.fetchAll(products => {
-        res.render('shop/index', {
-            productList: products,
-            pageTitle: 'Product List',
-            path: '/',
-            hasProducts: products.length > 0,
-            activeShop: true,
-            productCSS: true
-        });
-    });
+
+    Product.fetchAll().then(([row,fieldData])=>{
+        console.log(row);
+        }).catch(err=>{
+        console.log(err)
+    })
+    // Product.fetchAll(products => {
+    //     res.render('shop/index', {
+    //         productList: products,
+    //         pageTitle: 'Product List',
+    //         path: '/',
+    //         hasProducts: products.length > 0,
+    //         activeShop: true,
+    //         productCSS: true
+    //     });
+    // });
 };
 
 exports.getCarts = (req, res, next) => {

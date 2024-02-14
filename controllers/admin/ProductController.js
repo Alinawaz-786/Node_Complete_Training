@@ -1,4 +1,3 @@
-const { log } = require('console');
 const Product = require('../../models/product');
 
 exports.createItem = (req, res, next) => {
@@ -8,7 +7,6 @@ exports.createItem = (req, res, next) => {
         activeShop: true,
         productCSS: true
     });
-    // res.sendFile(path.join(rootDir, 'views', 'add-product.html'))
 };
 
 exports.saveItem = (req, res, next) => {
@@ -16,8 +14,17 @@ exports.saveItem = (req, res, next) => {
     const imgUrl = req.body.imgUrl;
     const price = req.body.price;
     const description = req.body.description;
-    const product = new Product('', title, imgUrl, price, description);
-    product.save();
+    // const product = new Product('', title, imgUrl, price, description);
+    Product.create({
+        title: title,
+        price: price,
+        imageUrl:imgUrl,
+        description:description,
+    }).then(result =>{
+        console.log(result)
+    }).catch(err=>{
+        console.log(err)
+    });
     res.redirect('/admin/product-list');
 };
 
@@ -50,7 +57,7 @@ exports.updateItem = (req, res, next) => {
 }
 
 exports.listItem = (req, res, next) => {
-    const products = Product.fetchAll(products => {
+    Product.findAll().then(products => {
         res.render('admin/list-product', {
             productList: products,
             pageTitle: 'Product List',
@@ -59,6 +66,8 @@ exports.listItem = (req, res, next) => {
             activeShop: true,
             productCSS: true
         });
+    }).catch(err=>{
+        console.log(err)
     });
 };
 
