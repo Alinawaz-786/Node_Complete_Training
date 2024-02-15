@@ -18,11 +18,11 @@ exports.saveItem = (req, res, next) => {
     Product.create({
         title: title,
         price: price,
-        imageUrl:imgUrl,
-        description:description,
-    }).then(result =>{
+        imageUrl: imgUrl,
+        description: description,
+    }).then(result => {
         console.log(result)
-    }).catch(err=>{
+    }).catch(err => {
         console.log(err)
     });
     res.redirect('/admin/product-list');
@@ -31,16 +31,19 @@ exports.saveItem = (req, res, next) => {
 
 exports.editItem = (req, res, next) => {
     const product_id = req.params.id;
-
-    Product.findById(product_id, product => {
-        res.render('admin/edit-product', {
-            pageTitle: 'Edit Product',
-            product: product,
-            path: 'admin/edit-product',
-            activeShop: true,
-            productCSS: true
+    Product.findOne({ where: { id: product_id } })
+        .then(product => {
+            console.log(product['title']);
+            res.render('admin/edit-product', {
+                pageTitle: 'Edit Product',
+                product: product,
+                path: 'admin/edit-product',
+                activeShop: true,
+                productCSS: true
+            });
+        }).catch(err => {
+            console.log(err);
         });
-    })
 }
 
 
@@ -50,10 +53,20 @@ exports.updateItem = (req, res, next) => {
     const price = req.body.price;
     const imgUrl = req.body.imgUrl;
     const description = req.body.description;
-    console.log(title);
-    const product = new Product(id, title, imgUrl, price, description);
-    product.save();
-    res.redirect('/admin/product-list');
+
+    Product.findOne({ where: { id: id } }).then(product => {
+        product.title = title;
+        product.price = price;
+        product.imageUrl = imgUrl;
+        product.description = description;
+        return product.save();
+    }).then(result => {
+        console.log("Update successFully");
+        res.redirect('/admin/product-list');
+    }).catch(err => {
+        console.log(err);
+    })
+
 }
 
 exports.listItem = (req, res, next) => {
@@ -66,14 +79,21 @@ exports.listItem = (req, res, next) => {
             activeShop: true,
             productCSS: true
         });
-    }).catch(err=>{
+    }).catch(err => {
         console.log(err)
     });
 };
 
 exports.deleteItem = (req, res, next) => {
     const product_id = req.params.id;
-    console.log(product_id);
-    Product.deleteById(product_id);
-    res.redirect('/admin/product-list');
+
+    Product.findOne({ where: { id: product_id } })
+    .then(product => {
+       return product.destroy();
+    }).then(result => {
+        console.log("Delete successFully");
+        res.redirect('/admin/product-list');
+    }).catch(err => {
+        console.log(err);
+    })
 }
