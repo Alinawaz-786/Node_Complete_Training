@@ -31,20 +31,16 @@ exports.saveItem = (req, res, next) => {
 
 exports.editItem = (req, res, next) => {
     const product_id = req.params.id;
-    Product.findOne({ where: { id: product_id } })
-        .then(product => {
-            console.log(product['title']);
-            res.render('admin/edit-product', {
-                pageTitle: 'Edit Product',
-                product: product,
-                path: 'admin/edit-product',
-                activeShop: true,
-                productCSS: true
-            });
-        }).catch(err => {
-            console.log(err);
+    Product.findOne({where: {id: product_id}}).then(product => {
+        res.render('admin/edit-product', {
+            pageTitle: 'Edit Product',
+            product: product,
+            path: 'admin/edit-product',
+            activeShop: true,
+            productCSS: true
         });
-}
+    })
+};
 
 
 exports.updateItem = (req, res, next) => {
@@ -53,21 +49,19 @@ exports.updateItem = (req, res, next) => {
     const price = req.body.price;
     const imgUrl = req.body.imgUrl;
     const description = req.body.description;
-
-    Product.findOne({ where: { id: id } }).then(product => {
+    Product.findOne({where: {id: id}}).then(product => {
         product.title = title;
         product.price = price;
         product.imageUrl = imgUrl;
         product.description = description;
         return product.save();
     }).then(result => {
-        console.log("Update successFully");
+        console.log("Update ");
         res.redirect('/admin/product-list');
     }).catch(err => {
-        console.log(err);
+        console.log(err)
     })
-
-}
+};
 
 exports.listItem = (req, res, next) => {
     Product.findAll().then(products => {
@@ -86,14 +80,11 @@ exports.listItem = (req, res, next) => {
 
 exports.deleteItem = (req, res, next) => {
     const product_id = req.params.id;
-
-    Product.findOne({ where: { id: product_id } })
-    .then(product => {
-       return product.destroy();
+    Product.findOne({where: {id: product_id}}).then(product => {
+        return product.destroy();
     }).then(result => {
-        console.log("Delete successFully");
         res.redirect('/admin/product-list');
     }).catch(err => {
-        console.log(err);
+        console.log(err)
     })
-}
+};
