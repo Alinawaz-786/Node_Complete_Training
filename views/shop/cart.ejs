@@ -12,10 +12,10 @@
 
 <body>
   <%- include('../include/navber.ejs') %>
-  <h2>Cart Products</h2>
+  <h2>cart Products</h2>
   <ul>
     <% products.forEach(p => { %>
-      <li><%= p.productData.title %> (<%= p.qty %>)</li>
+      <li><%= p.title %> (<%= p.cartItem.quantity %>)</li>
     <% }) %>
   </ul>
 </body>

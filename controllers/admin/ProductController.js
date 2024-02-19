@@ -15,7 +15,7 @@ exports.saveItem = (req, res, next) => {
     const price = req.body.price;
     const description = req.body.description;
     // const product = new Product('', title, imgUrl, price, description);
-    Product.create({
+    req.user.createProduct({
         title: title,
         price: price,
         imageUrl: imgUrl,
