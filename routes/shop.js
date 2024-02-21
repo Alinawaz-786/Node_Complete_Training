@@ -6,6 +6,7 @@ router.get('/', productController.index);
 router.get('/carts', productController.getCarts);
 router.post('/add-to-cart', productController.postCarts);
 router.get('/orders', productController.getOrders);
+router.post('/create-order', productController.postOrder);
 router.get('/checkout', productController.checkout);
 
 

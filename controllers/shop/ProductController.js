@@ -37,8 +37,8 @@ exports.getCarts = (req, res, next) => {
                 });
 
             }).catch(err => {
-            console.log(err)
-        })
+                console.log(err)
+            })
     }).catch(err => {
         console.log(err)
     })
@@ -69,7 +69,7 @@ exports.postCarts = (req, res, next) => {
     const productId = req.body.product_id;
     let fetchedCart;
     req.user.getCart().then(cart => {
-        return cart.getProducts({where: {id: productId}})
+        return cart.getProducts({ where: { id: productId } })
     }).then(products => {
         let product;
         if (products.length > 0) {
@@ -81,7 +81,7 @@ exports.postCarts = (req, res, next) => {
             newQuantity = qty + 1;
             return CartItem.update({
                 quantity: newQuantity,
-            }, {where: {id: product.cartItem.id}});
+            }, { where: { id: product.cartItem.id } });
         }
         return Product.findByPk(productId).then(product => {
             return CartItem.create({
@@ -105,7 +105,39 @@ exports.postCarts = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
+    req.user.getOrders({ include: ['products'] }).then(orders => {
+        console.log(orders);
+        res.render('shop/order', {
+            orders: orders,
+            pageTitle: 'Order',
+            path: '/orders',
+            activeShop: true,
+            productCSS: true
+        });
+    }).catch(err => {
+        console.log(err);
+    });
 };
+
+exports.postOrder = (req, res, next) => {
+    req.user.getCart().then(cart => {
+        return cart.getProducts();
+    }).then(products => {
+        req.user.createOrder()
+            .then(order => {
+                return order.addProducts(
+                    products.map(product => {
+                        product.OrderItem = { quantity: product.cartItem.quantity };
+                        return product;
+                    })
+                )
+            }).catch(err => { console.log(err); })
+    }).then(result => {
+        res.redirect('/orders');
+    })
+        .catch(err => console.log(err));
+};
+
 exports.checkout = (req, res, next) => {
 };
 

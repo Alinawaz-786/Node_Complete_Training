@@ -8,7 +8,8 @@ const sequelize = require('./utils/database');
 const Product = require('./models/product');
 const User = require('./models/user');
 const Cart = require('./models/cart');
-const CartItem = require('./models/CartItem');
+const Order = require('./models/order');
+const OrderItem = require('./models/orderItem');
 
 const app = express();
 
@@ -26,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Set User {middlware}.
 
-app.use('/', (req, res, next) => {
+app.use((req, res, next) => {
     User.findByPk(1).then(user => {
         req.user = user;
         next();
@@ -66,7 +67,7 @@ sequelize.sync(
         return user;
     })
     .then(user => {
-        // return user.createCart();
+        return user.createCart();
     })
     .then(cart => {
         app.listen(3000);
