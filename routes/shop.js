@@ -4,6 +4,7 @@ const shopController = require('../controllers/products');
 const isAuth = require('../middleware/is-auth');
 const router = express.Router();
 
+router.get('/download-excel', shopController.downloadExcel);
 router.get('/', isAuth, shopController.getProducts);
 // router.get('/', shopController.getIndex);
 // router.get('/products', shopController.getShop);
